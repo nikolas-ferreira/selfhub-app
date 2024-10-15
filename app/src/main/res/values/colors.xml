@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    App default colors-->
+    <color name="app_default_primary_color">#FFBB86FC</color>
+    <color name="app_default_second_color">#FF6200EE</color>
+    <color name="app_background">#686868</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--    Colors for Text components-->
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+
+    <!--    Colors for Button components-->
+    <color name="teal_700">#FF018786</color>
+
+
+    <!--    Colors for components-->
+    <!--    Menu Category Item Component-->
+    <color name="menu_category_item_card_unselected_background">#FFFFFF</color>
+    <color name="menu_category_item_card_selected_background">#F5F9FF</color>
+    <color name="menu_category_item_card_selected_border">#2D71F8</color>
+    <color name="menu_category_item_card_unselected_border">#FFFFFF</color>
+
+    <!--    Icon Menu Category Item Component-->
+    <color name="icon_menu_category_item_card_selected_background">#2D71F8</color>
+    <color name="icon_menu_category_item_card_unselected_background">#F7F7F7</color>
+    <color name="icon_menu_category_item_card_selected">#FFFFFF</color>
+    <color name="icon_menu_category_item_card_unselected">#686868</color>
+
+    <!--    Search Bar Component-->
+    <color name="search_bar_background">#FFFFFF</color>
+    <color name="search_bar_border">#FFFFFF</color>
+
+</resources>

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "624391123510",
+    "firebase_url": "https://selfhub-android-default-rtdb.firebaseio.com",
+    "project_id": "selfhub-android",
+    "storage_bucket": "selfhub-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624391123510:android:83d52e5d4116d4b68c9e97",
+        "android_client_info": {
+          "package_name": "digital.studioweb.selfhub_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxqPPlGB6Hlfjo2VJplyZCMziZtYHk43M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
