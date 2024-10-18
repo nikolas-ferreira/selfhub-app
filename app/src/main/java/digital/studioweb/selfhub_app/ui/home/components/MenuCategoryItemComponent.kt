@@ -1,6 +1,7 @@
 package digital.studioweb.selfhub_app.ui.home.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,8 @@ fun MenuCategoryItemComponent(
     isSelected: Boolean,
     menuCategoryIcon: Int,
     menuCategoryName: String,
-    menuCategoryCount: Int
+    menuCategoryCount: Int,
+    onClick: () -> Unit
 ) {
     val backgroundColor = if (isSelected) {
         colorResource(id = R.color.menu_category_item_card_selected_background)
@@ -44,7 +46,9 @@ fun MenuCategoryItemComponent(
     Card(
         border = BorderStroke(1.dp, borderColor),
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        modifier = Modifier.size(100.dp)
+        modifier = Modifier
+            .size(100.dp)
+            .clickable(onClick = onClick)
     ) {
         Column(
             modifier = Modifier
@@ -79,15 +83,16 @@ private fun Preview() {
             isSelected = true,
             menuCategoryIcon = R.drawable.ic_menu_category,
             menuCategoryName = "Todos Itens",
-            menuCategoryCount = 120
+            menuCategoryCount = 120,
+            onClick = {}
         )
         Spacer(modifier = Modifier.height(20.dp))
         MenuCategoryItemComponent(
             isSelected = false,
             menuCategoryIcon = R.drawable.ic_menu_category,
             menuCategoryName = "Todos Itens",
-            menuCategoryCount = 120
+            menuCategoryCount = 120,
+            onClick = {}
         )
     }
-
 }
