@@ -6,6 +6,7 @@
     <color name="app_background">#F7F7F7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="divider_color">#98EBEBEB</color>
 
     <!--    Colors for Text components-->
     <color name="purple_700">#FF3700B3</color>
