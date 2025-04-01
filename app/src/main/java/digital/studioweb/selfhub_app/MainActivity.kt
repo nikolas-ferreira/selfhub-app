@@ -13,6 +13,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import digital.studioweb.selfhub_app.ui.home.HomeScreen
+import digital.studioweb.selfhub_app.ui.theme.SelfHubAppTheme
 
 
 @AndroidEntryPoint
@@ -25,12 +26,15 @@ class MainActivity : ComponentActivity() {
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.let { controller ->
             controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         enableEdgeToEdge()
         setContent {
-            HomeScreen()
+            SelfHubAppTheme {
+                HomeScreen()
+            }
         }
     }
 }

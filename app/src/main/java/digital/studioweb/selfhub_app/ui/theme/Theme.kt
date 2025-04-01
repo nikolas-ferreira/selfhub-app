@@ -9,6 +9,14 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import digital.studioweb.selfhub_app.R
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -20,22 +28,36 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
+
+val dinnext = FontFamily(
+    Font(R.font.dinnext_regular, FontWeight.Normal),
+    Font(R.font.dinnext_regular, FontWeight.Medium),
+    Font(R.font.dinnext_regular, FontWeight.Bold),
+)
+
+val Typography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = dinnext,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = dinnext,
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = dinnext,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp
+    ),
+)
+
 
 @Composable
 fun SelfHubAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    darkTheme: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -51,7 +73,7 @@ fun SelfHubAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography, // vem de Typography.kt ou Type.kt
         content = content
     )
 }

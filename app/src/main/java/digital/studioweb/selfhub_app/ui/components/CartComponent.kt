@@ -36,7 +36,7 @@ import digital.studioweb.selfhub_app.R
 fun CartComponent() {
     Box(
         modifier = Modifier
-            .fillMaxHeight()
+//            .fillMaxHeight()
             .background(Color.White)
     ) {
         Column(

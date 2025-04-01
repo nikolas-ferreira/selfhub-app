@@ -3,7 +3,7 @@
     "project_number": "624391123510",
     "firebase_url": "https://selfhub-android-default-rtdb.firebaseio.com",
     "project_id": "selfhub-android",
-    "storage_bucket": "selfhub-android.appspot.com"
+    "storage_bucket": "selfhub-android.firebasestorage.app"
   },
   "client": [
     {

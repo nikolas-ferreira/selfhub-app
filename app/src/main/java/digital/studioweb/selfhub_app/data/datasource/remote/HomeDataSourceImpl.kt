@@ -2,6 +2,7 @@ package digital.studioweb.selfhub_app.data.datasource.remote
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import digital.studioweb.selfhub_app.data.models.AddItems
 import digital.studioweb.selfhub_app.data.models.MenuCategoryItem
 import digital.studioweb.selfhub_app.data.models.Product
 import digital.studioweb.selfhub_app.data.utils.FirebaseUtils.FIREBASE_CATEGORIES_COLLECTION_NAME
@@ -40,9 +41,21 @@ class HomeDataSourceImpl : HomeDataSource {
             val documents = db.collection(FIREBASE_PRODUCTS_COLLECTION_NAME)
                 .get()
                 .await()
-
             documents.documents.mapNotNull { document ->
-                document.toObject(Product::class.java)
+                document.data?.let { data ->
+                    val addItemsList = (data["addItems"] as? List<*>)?.mapNotNull { item ->
+                        (item as? Map<*, *>)?.let { map ->
+                            AddItems(
+                                name = map["name"] as? String ?: "",
+                                price = (map["price"] as? Number)?.toDouble() ?: 0.0
+                            )
+                        }
+                    } ?: emptyList()
+                    document.toObject(Product::class.java)?.apply {
+                        id = document.id
+                        addItems = addItemsList
+                    }
+                }
             }
         } catch (exception: Exception) {
             println("Erro ao buscar dados: ${exception.message}")
