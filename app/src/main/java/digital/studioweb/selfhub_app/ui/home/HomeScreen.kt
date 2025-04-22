@@ -214,7 +214,7 @@ fun HomeScreen() {
                     Text("Error")
                 }
             }
-        }
+        })
     )
 }
 
