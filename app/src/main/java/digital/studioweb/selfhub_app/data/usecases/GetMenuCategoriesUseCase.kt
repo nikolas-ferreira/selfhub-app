@@ -5,10 +5,6 @@ import digital.studioweb.selfhub_app.data.repositories.HomeRepository
 import digital.studioweb.selfhub_app.data.utils.Result
 import javax.inject.Inject
 
-/**
- * UseCase responsible for retrieving menu categories.
- * Follows the single responsibility principle by focusing on one domain action.
- */
 class GetMenuCategoriesUseCase @Inject constructor(
     private val homeRepository: HomeRepository
 ) {

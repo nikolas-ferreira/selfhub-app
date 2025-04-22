@@ -4,26 +4,19 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import digital.studioweb.selfhub_app.BuildConfig
+import digital.studioweb.selfhub_app.data.utils.FirebaseUtils
 import digital.studioweb.selfhub_app.data.utils.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Implementation of FirebaseService that handles all Firebase interactions.
- * Includes retry mechanism for critical operations.
- */
 @Singleton
 class FirebaseServiceImpl @Inject constructor() : FirebaseService {
 
     private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     
-    // Maximum number of retry attempts
     private val maxRetries = 3
-    
-    // Base delay for exponential backoff (in milliseconds)
     private val baseDelayMs = 1000L
 
     override suspend fun getCollection(
@@ -59,21 +52,9 @@ class FirebaseServiceImpl @Inject constructor() : FirebaseService {
     }
 
     override fun getRestaurantId(): String {
-        // In a real app, this would come from BuildConfig or similar
-        // For now, we'll use a fallback value if not available
-        return try {
-            BuildConfig.FIREBASE_RESTAURANT_ID
-        } catch (e: Exception) {
-            // Fallback for development/testing
-            "PnE5ONo0ipKDDOpfyvBB"
-        }
+        return FirebaseUtils.FIREBASE_RESTAURANT_ID
     }
 
-    /**
-     * Helper function to implement retry with exponential backoff.
-     * @param block The suspend function to retry.
-     * @return Result containing the result of the operation or an error.
-     */
     private suspend fun <T> withRetry(block: suspend () -> T): Result<T> {
         var currentDelay = baseDelayMs
         var lastException: Exception? = null
@@ -85,7 +66,7 @@ class FirebaseServiceImpl @Inject constructor() : FirebaseService {
                 lastException = e
                 if (attempt < maxRetries - 1) {
                     delay(currentDelay)
-                    currentDelay *= 2 // Exponential backoff
+                    currentDelay *= 2
                 }
             }
         }
