@@ -62,7 +62,7 @@ fun CartComponent(
                         .clickable(onClick = onClose)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_back),
+                        painter = painterResource(id = R.drawable.ic_arrow_back),
                         colorFilter = ColorFilter.tint(colorResource(R.color.icon_menu_category_item_card_unselected)),
                         contentDescription = "Close",
                         modifier = Modifier.padding(12.dp)

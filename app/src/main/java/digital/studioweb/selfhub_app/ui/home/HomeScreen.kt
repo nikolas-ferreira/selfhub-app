@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.ui.components.CalendarComponent
 import digital.studioweb.selfhub_app.ui.components.CallWaiterComponent
+import digital.studioweb.selfhub_app.ui.components.CartComponent
 import digital.studioweb.selfhub_app.ui.components.ClockComponent
 import digital.studioweb.selfhub_app.ui.components.RoundedSmallShapeComponent
 import digital.studioweb.selfhub_app.ui.home.components.MenuCategoryItemComponent
@@ -61,7 +62,7 @@ fun HomeScreen() {
         drawerContent = {
             Surface(
                 modifier = Modifier
-                    .width(300.dp)
+                    .width(500.dp)
                     .fillMaxHeight(),
                 color = Color.White
             ) {
