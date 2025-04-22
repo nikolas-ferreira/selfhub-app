@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.ui.components.CalendarComponent
 import digital.studioweb.selfhub_app.ui.components.CallWaiterComponent
+import digital.studioweb.selfhub_app.ui.components.CartComponent
 import digital.studioweb.selfhub_app.ui.components.ClockComponent
 import digital.studioweb.selfhub_app.ui.components.RoundedSmallShapeComponent
 import digital.studioweb.selfhub_app.ui.home.components.MenuCategoryItemComponent
@@ -55,9 +57,23 @@ fun HomeScreen() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        scrimColor = Color.Transparent,
+        scrimColor = Color.Black.copy(alpha = 0.3f),
+        gesturesEnabled = true,
         drawerContent = {
-//             CartComponent()
+            Surface(
+                modifier = Modifier
+                    .width(300.dp)
+                    .fillMaxHeight(),
+                color = Color.White
+            ) {
+                CartComponent(
+                    onClose = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                    }
+                )
+            }
         },
         content = {
             when (viewModel.state.value) {
