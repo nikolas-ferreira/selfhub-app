@@ -62,7 +62,7 @@ fun HomeScreen() {
         drawerContent = {
             Surface(
                 modifier = Modifier
-                    .width(500.dp)
+                    .width(300.dp)
                     .fillMaxHeight(),
                 color = Color.White
             ) {
