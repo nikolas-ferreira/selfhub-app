@@ -3,7 +3,10 @@ package digital.studioweb.selfhub_app.ui.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import digital.studioweb.selfhub_app.data.models.MenuCategoryItem
 import digital.studioweb.selfhub_app.data.models.Product
-import digital.studioweb.selfhub_app.data.usecases.HomeUseCase
+import digital.studioweb.selfhub_app.data.usecases.FilterProductsByCategoryUseCase
+import digital.studioweb.selfhub_app.data.usecases.GetMenuCategoriesUseCase
+import digital.studioweb.selfhub_app.data.usecases.GetProductsUseCase
+import digital.studioweb.selfhub_app.data.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -27,7 +30,13 @@ class HomeViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     @Mock
-    private lateinit var homeUseCase: HomeUseCase
+    private lateinit var getMenuCategoriesUseCase: GetMenuCategoriesUseCase
+
+    @Mock
+    private lateinit var getProductsUseCase: GetProductsUseCase
+
+    @Mock
+    private lateinit var filterProductsByCategoryUseCase: FilterProductsByCategoryUseCase
 
     private lateinit var viewModel: HomeViewModel
 
@@ -35,7 +44,11 @@ class HomeViewModelTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
-        viewModel = HomeViewModel(homeUseCase)
+        viewModel = HomeViewModel(
+            getMenuCategoriesUseCase,
+            getProductsUseCase,
+            filterProductsByCategoryUseCase
+        )
     }
 
     @After
@@ -56,8 +69,8 @@ class HomeViewModelTest {
             Product(id = "2", name = "Pizza", price = 20.0)
         )
 
-        `when`(homeUseCase.getMenuCategoryItems()).thenReturn(menuCategoryItems)
-        `when`(homeUseCase.getAllProducts()).thenReturn(products)
+        `when`(getMenuCategoriesUseCase()).thenReturn(Result.Success(menuCategoryItems))
+        `when`(getProductsUseCase()).thenReturn(Result.Success(products))
 
         // When
         viewModel.getMenuCategoryItems()
@@ -72,7 +85,8 @@ class HomeViewModelTest {
     @Test
     fun `getMenuCategoryItems should update state to Error when exception is thrown`() = testDispatcher.runBlockingTest {
         // Given
-        `when`(homeUseCase.getMenuCategoryItems()).thenThrow(RuntimeException("Network error"))
+        val exception = RuntimeException("Network error")
+        `when`(getMenuCategoriesUseCase()).thenReturn(Result.Error(exception))
 
         // When
         viewModel.getMenuCategoryItems()
@@ -90,16 +104,12 @@ class HomeViewModelTest {
             Product(id = "2", name = "Pizza", category = null, price = 20.0)
         )
         
-        // Mock the category reference in a way that matches the filter condition
-        val mockProduct1 = Product(id = "3", name = "Fries", price = 5.0)
-        val mockProduct2 = Product(id = "4", name = "Salad", price = 8.0)
-        
         // Set up the test data
-        viewModel.allProducts.value = listOf(
-            mockProduct1,
-            mockProduct2,
-            Product(id = "5", name = "Soda", price = 3.0)
-        )
+        viewModel.allProducts.value = products
+        
+        // Mock the filter result
+        `when`(filterProductsByCategoryUseCase(products, categoryId))
+            .thenReturn(Result.Success(emptyList()))
         
         // When
         val result = viewModel.getProductsFromCategory(categoryId)
