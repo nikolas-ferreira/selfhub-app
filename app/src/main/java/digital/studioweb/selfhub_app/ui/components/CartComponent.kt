@@ -2,6 +2,7 @@ package digital.studioweb.selfhub_app.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,10 +34,12 @@ import digital.studioweb.selfhub_app.R
 
 @Preview(showBackground = true)
 @Composable
-fun CartComponent() {
+fun CartComponent(
+    onClose: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
-//            .fillMaxHeight()
+            .fillMaxHeight()
             .background(Color.White)
     ) {
         Column(
@@ -54,12 +57,14 @@ fun CartComponent() {
                 Surface(
                     color = colorResource(R.color.app_background),
                     shape = RoundedCornerShape(50),
-                    modifier = Modifier.size(44.dp)
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clickable(onClick = onClose)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_order),
+                        painter = painterResource(id = R.drawable.ic_back),
                         colorFilter = ColorFilter.tint(colorResource(R.color.icon_menu_category_item_card_unselected)),
-                        contentDescription = null,
+                        contentDescription = "Close",
                         modifier = Modifier.padding(12.dp)
                     )
                 }

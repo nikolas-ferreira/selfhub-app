@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,9 +56,23 @@ fun HomeScreen() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        scrimColor = Color.Transparent,
+        scrimColor = Color.Black.copy(alpha = 0.3f),
+        gesturesEnabled = true,
         drawerContent = {
-//             CartComponent()
+            Surface(
+                modifier = Modifier
+                    .width(300.dp)
+                    .fillMaxHeight(),
+                color = Color.White
+            ) {
+                CartComponent(
+                    onClose = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                    }
+                )
+            }
         },
         content = {
             when (viewModel.state.value) {
