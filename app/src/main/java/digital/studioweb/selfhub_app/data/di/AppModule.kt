@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import digital.studioweb.selfhub_app.data.datasource.firebase.FirebaseService
+import digital.studioweb.selfhub_app.data.datasource.firebase.FirebaseServiceImpl
 import digital.studioweb.selfhub_app.data.datasource.remote.HomeDataSource
 import digital.studioweb.selfhub_app.data.datasource.remote.HomeDataSourceImpl
 import digital.studioweb.selfhub_app.data.repositories.HomeRepository
@@ -18,8 +20,16 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideHomeDataSource(): HomeDataSource {
-        return HomeDataSourceImpl()
+    fun provideFirebaseService(): FirebaseService {
+        return FirebaseServiceImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeDataSource(
+        firebaseService: FirebaseService
+    ): HomeDataSource {
+        return HomeDataSourceImpl(firebaseService)
     }
 
     @Provides
