@@ -69,7 +69,6 @@ fun HomeScreen() {
                     .fillMaxHeight(),
                 color = Color.White
             ) {
-                // Menu drawer content
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -84,7 +83,7 @@ fun HomeScreen() {
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                     HorizontalDivider(
-                        color = colorResource(R.color.divider_color), 
+                        color = colorResource(R.color.divider_color),
                         thickness = 2.dp
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -117,104 +116,109 @@ fun HomeScreen() {
                     }
                 },
                 content = {
-            when (viewModel.state.value) {
-                is HomeState.Loading -> {
-                    Text("Loading")
-                }
+                    when (viewModel.state.value) {
+                        is HomeState.Loading -> {
+                            Text("Loading")
+                        }
 
-                is HomeState.Success -> {
-                    val categories = viewModel.categoriesData.value
-                    var products = viewModel.productsFromCategory.value
+                        is HomeState.Success -> {
+                            val categories = viewModel.categoriesData.value
+                            var products = viewModel.productsFromCategory.value
 
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(colorResource(id = R.color.app_background))
-                                .padding(24.dp)
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
                             ) {
-                                Row {
-                                    RoundedSmallShapeComponent(
-                                        icon = R.drawable.ic_hamburger_menu,
-                                        onClick = {
-                                            coroutineScope.launch {
-                                                leftDrawerState.open()
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(colorResource(id = R.color.app_background))
+                                        .padding(24.dp)
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Row {
+                                            RoundedSmallShapeComponent(
+                                                icon = R.drawable.ic_hamburger_menu,
+                                                onClick = {
+                                                    coroutineScope.launch {
+                                                        leftDrawerState.open()
+                                                    }
+                                                }
+                                            )
+                                            Spacer(modifier = Modifier.width(24.dp))
+                                            CalendarComponent()
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            ClockComponent()
+                                        }
+
+                                        CartButton(
+                                            onClick = {
+                                                coroutineScope.launch {
+                                                    rightDrawerState.open()
+                                                }
+                                            }
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp)
+                                            .horizontalScroll(scrollState),
+                                    ) {
+                                        MenuCategoryItemComponent(
+                                            isSelected = selectedItemIndex == -1,
+                                            menuCategoryName = "Todos Itens",
+                                            menuCategoryIcon = R.drawable.ic_menu_category,
+                                            onClick = {
+                                                products = viewModel.allProducts.value
+                                                selectedItemIndex = -1
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        categories?.forEachIndexed { index, category ->
+                                            MenuCategoryItemComponent(
+                                                isSelected = selectedItemIndex == index,
+                                                menuCategoryName = category.name,
+                                                menuCategoryIcon = R.drawable.ic_menu_category,
+                                                onClick = {
+                                                    products =
+                                                        viewModel.getProductsFromCategory(category.id)
+                                                    selectedItemIndex = index
+                                                }
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(28.dp))
+                                    LazyVerticalGrid(
+                                        columns = GridCells.Adaptive(minSize = 180.dp),
+                                        contentPadding = PaddingValues(bottom = 24.dp),
+                                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(24.dp)
+                                    ) {
+                                        products?.let { products ->
+                                            items(products.size) { index ->
+                                                ProductComponent(product = products[index])
                                             }
                                         }
-                                    )
-                                    Spacer(modifier = Modifier.width(24.dp))
-                                    CalendarComponent()
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    ClockComponent()
+                                    }
                                 }
+                            }
+                        }
 
-                                CartButton(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            rightDrawerState.open()
-                                        }
-                                    }
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 24.dp)
-                                    .horizontalScroll(scrollState),
-                            ) {
-                                MenuCategoryItemComponent(
-                                    isSelected = selectedItemIndex == -1,
-                                    menuCategoryName = "Todos Itens",
-                                    menuCategoryIcon = R.drawable.ic_menu_category,
-                                    onClick = {
-                                        products = viewModel.allProducts.value
-                                        selectedItemIndex = -1
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                categories?.forEachIndexed { index, category ->
-                                    MenuCategoryItemComponent(
-                                        isSelected = selectedItemIndex == index,
-                                        menuCategoryName = category.name,
-                                        menuCategoryIcon = R.drawable.ic_menu_category,
-                                        onClick = {
-                                            products = viewModel.getProductsFromCategory(category.id)
-                                            selectedItemIndex = index
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(28.dp))
-                            LazyVerticalGrid(
-                                columns = GridCells.Adaptive(minSize = 180.dp),
-                                contentPadding = PaddingValues(bottom = 24.dp),
-                                verticalArrangement = Arrangement.spacedBy(24.dp),
-                                horizontalArrangement = Arrangement.spacedBy(24.dp)
-                            ) {
-                                products?.let { products ->
-                                    items(products.size) { index ->
-                                        ProductComponent(product = products[index])
-                                    }
-                                }
-                            }
-                       }
+                        is HomeState.Error -> {
+                            Text("Error")
+                        }
                     }
-                }
+                })
 
-                is HomeState.Error -> {
-                    Text("Error")
-                }
-            }
-        })
+        }
     )
 }
+
+
 
