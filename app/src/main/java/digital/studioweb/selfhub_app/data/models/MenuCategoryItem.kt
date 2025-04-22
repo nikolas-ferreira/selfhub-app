@@ -1,8 +1,10 @@
 package digital.studioweb.selfhub_app.data.models
 
+import com.google.firebase.firestore.DocumentReference
+
 data class MenuCategoryItem(
-    val id: String,
-    val title: String,
-    val itemsCount: Int,
-    val iconUrl: String
+    var id: String = "",
+    val iconUrl: String = "",
+    val name: String = "",
+    val restaurant: DocumentReference? = null
 )

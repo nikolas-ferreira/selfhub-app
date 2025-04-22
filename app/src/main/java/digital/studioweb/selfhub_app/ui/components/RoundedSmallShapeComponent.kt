@@ -37,7 +37,7 @@ fun RoundedSmallShapeComponent(
             painter = painterResource(id = icon),
             colorFilter = ColorFilter.tint(
                 colorResource(
-                    id = colorFilter ?: R.color.icon_menu_category_item_card_selected_background
+                    id = colorFilter ?: R.color.primary_orange
                 )
             ),
             contentDescription = null,

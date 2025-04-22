@@ -43,7 +43,7 @@ fun CalendarComponent() {
                 painter = painterResource(id = R.drawable.ic_calendar),
                 colorFilter = ColorFilter.tint(
                     colorResource(
-                        id = R.color.icon_menu_category_item_card_selected_background
+                        id = R.color.primary_orange
                     )
                 ),
                 contentDescription = null,

@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-02T17:24:13.194813734Z">
+        <DropdownSelection timestamp="2025-03-31T19:47:55.610904100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/magalu/.android/avd/Pixel_7_Pro_API_35_-_Maior_Tela.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\nikol\.android\avd\Medium_Tablet_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>

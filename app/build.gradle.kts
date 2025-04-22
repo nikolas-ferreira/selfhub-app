@@ -44,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -70,10 +70,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.firestore.ktx)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -81,6 +84,5 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.hilt.navigation.compose)
-
 
 }

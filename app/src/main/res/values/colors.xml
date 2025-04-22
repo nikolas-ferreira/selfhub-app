@@ -3,9 +3,12 @@
     <!--    App default colors-->
     <color name="app_default_primary_color">#FFBB86FC</color>
     <color name="app_default_second_color">#FF6200EE</color>
-    <color name="app_background">#F7F7F7</color>
+    <color name="app_background">#F8F8F8</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="divider_color">#98EBEBEB</color>
+    <color name="dark_color">#141414</color>
+    <color name="primary_orange">#F26801</color>
 
     <!--    Colors for Text components-->
     <color name="purple_700">#FF3700B3</color>
@@ -14,12 +17,13 @@
     <!--    Colors for Button components-->
     <color name="home_online_button">#228672</color>
 
+    <!--    Rounded Button-->
+    <color name="rounded_button_backgroud">#F2EFDB</color>
 
-    <!--    Colors for components-->
     <!--    Menu Category Item Component-->
     <color name="menu_category_item_card_unselected_background">#FFFFFF</color>
-    <color name="menu_category_item_card_selected_background">#F5F9FF</color>
-    <color name="menu_category_item_card_selected_border">#2D71F8</color>
+    <color name="menu_category_item_card_selected_background">#F26801</color>
+    <color name="menu_category_item_card_selected_border">#F26801</color>
     <color name="menu_category_item_card_unselected_border">#FFFFFF</color>
 
     <!--    Icon Menu Category Item Component-->
@@ -32,4 +36,8 @@
     <color name="search_bar_background">#FFFFFF</color>
     <color name="search_bar_border">#FFFFFF</color>
 
+    <!--    Product Component-->
+    <color name="product_component_card_background">#FFFFFF</color>
+    <color name="product_component_photo_background">#141414</color>
+    <color name="product_component_order_button_background">#FD9E53</color>
 </resources>

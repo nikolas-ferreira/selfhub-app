@@ -12,6 +12,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +33,15 @@ import java.time.format.DateTimeFormatter
 @Preview(showBackground = true)
 @Composable
 fun ClockComponent() {
+    var currentTime by remember { mutableStateOf(formatCurrentTime()) }
+    
+    LaunchedEffect(Unit) {
+        while(true) {
+            currentTime = formatCurrentTime()
+            delay(1000) // Update every second
+        }
+    }
+    
     Box(
         modifier = Modifier
             .height(45.dp)
@@ -42,7 +57,7 @@ fun ClockComponent() {
                 painter = painterResource(id = R.drawable.ic_clock),
                 colorFilter = ColorFilter.tint(
                     colorResource(
-                        id = R.color.icon_menu_category_item_card_selected_background
+                        id = R.color.primary_orange
                     )
                 ),
                 contentDescription = null,
@@ -50,7 +65,7 @@ fun ClockComponent() {
             )
             Spacer(modifier = Modifier.width(12.dp))
 
-            Text(formatCurrentTime())
+            Text(currentTime)
             Spacer(modifier = Modifier.width(12.dp))
         }
     }
@@ -58,6 +73,6 @@ fun ClockComponent() {
 
 private fun formatCurrentTime(): String {
     val now = LocalTime.now()
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     return now.format(timeFormatter)
 }
