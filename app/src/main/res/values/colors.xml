@@ -21,10 +21,10 @@
     <color name="rounded_button_backgroud">#F2EFDB</color>
 
     <!--    Menu Category Item Component-->
-    <color name="menu_category_item_card_unselected_background">#FFFFFF</color>
-    <color name="menu_category_item_card_selected_background">#F26801</color>
-    <color name="menu_category_item_card_selected_border">#F26801</color>
-    <color name="menu_category_item_card_unselected_border">#FFFFFF</color>
+    <color name="menu_category_item_card_unselected_background">#F6F6F6</color>
+    <color name="menu_category_item_card_selected_background">#FF8B08</color>
+    <color name="menu_category_item_card_selected_border">#FF8B08</color>
+    <color name="menu_category_item_card_unselected_border">#F6F6F6</color>
 
     <!--    Icon Menu Category Item Component-->
     <color name="icon_menu_category_item_card_selected_background">#2D71F8</color>
@@ -40,4 +40,7 @@
     <color name="product_component_card_background">#FFFFFF</color>
     <color name="product_component_photo_background">#141414</color>
     <color name="product_component_order_button_background">#FD9E53</color>
+
+    <!--    Add Item Component-->
+    <color name="add_item_component_background">#F7F7F7</color>
 </resources>
