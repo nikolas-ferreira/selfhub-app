@@ -2,13 +2,14 @@ package digital.studioweb.selfhub_app.ui.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,11 +22,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,29 +38,47 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import digital.studioweb.selfhub_app.R
+import digital.studioweb.selfhub_app.data.models.AddItem
 import digital.studioweb.selfhub_app.data.models.Product
 import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatToBRLCurrency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductComponent(product: Product) {
-    var isBottomSheetVisible by remember { mutableStateOf(false) }
+    val openDialog = remember { mutableStateOf(false) }
 
-    if (isBottomSheetVisible) {
-        ModalBottomSheet(
-            onDismissRequest = { isBottomSheetVisible = false }
+    fun showModal() {
+        openDialog.value = true
+    }
+
+    fun closeModal() {
+        openDialog.value = false
+    }
+
+    if (openDialog.value) {
+        Dialog(
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false
+            ),
+            onDismissRequest = { closeModal() }
         ) {
-            BottomSheetContent(product)
+            DialogContent(product)
         }
     }
 
@@ -88,7 +109,7 @@ fun ProductComponent(product: Product) {
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
+                        .height(140.dp)
                         .clip(RoundedCornerShape(8.dp))
                 )
             }
@@ -97,6 +118,7 @@ fun ProductComponent(product: Product) {
                     product.name,
                     color = colorResource(R.color.dark_color),
                     fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
@@ -120,18 +142,16 @@ fun ProductComponent(product: Product) {
                         color = colorResource(R.color.product_component_order_button_background),
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
-                            .size(18.dp)
-
+                            .size(24.dp)
+                            .clickable {
+                                showModal()
+                            }
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_add),
                             contentDescription = null,
                             modifier = Modifier
                                 .padding(1.dp)
-                                .clickable {
-                                    isBottomSheetVisible = true
-                                }
-
                         )
                     }
                 }
@@ -141,151 +161,185 @@ fun ProductComponent(product: Product) {
 }
 
 @Composable
-fun BottomSheetContent(product: Product) {
+private fun DialogContent(product: Product) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .width(600.dp)
+            .fillMaxHeight()
+            .padding(16.dp)
+            .background(Color.White, RoundedCornerShape(16.dp))
     ) {
-        Text(
-            letterSpacing = 2.sp,
-            text = product.name,
-            fontSize = 32.sp,
-            fontFamily = FontFamily(Font(R.font.calif_regular)),
-            color = Color.DarkGray,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = formatToBRLCurrency(product.price),
-                fontFamily = FontFamily(Font(R.font.dinnext_medium)),
-                color = colorResource(R.color.dark_color),
-                fontSize = 18.sp,
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(
-                    color = colorResource(R.color.product_component_order_button_background),
-                    shape = RoundedCornerShape(50),
+        LazyColumn {
+            item {
+                Image(
+                    painter = painterResource(R.drawable.risoto),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "",
                     modifier = Modifier
-                        .size(16.dp)
-
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_remove),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(1.dp)
-                            .clickable { }
-
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "1",
-                    color = colorResource(R.color.dark_color),
-                    fontSize = 12.sp,
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                        .height(350.dp)
                 )
-                Spacer(modifier = Modifier.width(12.dp))
-                Surface(
-                    color = colorResource(R.color.product_component_order_button_background),
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier
-                        .size(16.dp)
-
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(1.dp)
-                            .clickable { }
-
+            }
+            item {
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    Spacer(modifier = Modifier.height(26.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Risoto de Tomatte",
+                            fontSize = 24.sp,
+                            color = Color.DarkGray
+                        )
+                        ProductCount()
+                    }
+                    Text(
+                        text = formatToBRLCurrency(49.99),
+                        color = colorResource(R.color.dark_color),
+                        fontSize = 22.sp,
                     )
+                    Spacer(modifier = Modifier.height(26.dp))
+                    ProductDetailsComponent()
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        lineHeight = 18.sp,
+                        text = "Risoto à Tomatto, uma verdadeira especialidade da casa.\nCoberto de tomates cereja ao molho de gorgonzola, com páprica picante no ponto certo. Acompanha um cordeiro, bife ao ponto, sem mais nem menos.\nExcelente escolha para quem quer um jantar sofisticado e leve.",
+                        color = Color.Gray,
+                        fontSize = 12.sp
+                    )
+                    Spacer(modifier = Modifier.height(26.dp))
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            lineHeight = 18.sp,
-            text = "Risoto à Tomatto, uma verdadeira especialidade da casa.\nCoberto de tomates cereja ao molho de gorgonzola, com páprica picante no ponto certo. Acompanha um cordeiro, bife ao ponto, sem mais nem menos.\nExcelente escolha para quem quer um jantar sofisticado e leve.\nServe até 2 pessoas.",
-            color = Color.Gray,
-            fontSize = 12.sp
-        )
-        Spacer(modifier = Modifier.height(24.dp))
 
-        product.addItems?.let { addItems ->
-            Text(
-                text = "ADICIONAIS",
-                fontFamily = FontFamily(Font(R.font.dinnext_medium)),
-                color = colorResource(R.color.dark_color),
-                fontSize = 18.sp
-            )
-            LazyColumn {
+            product.addItems?.let { addItems ->
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        Text(
+                            text = "ADICIONAIS",
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.dinnext_medium))
+                            ),
+                            color = colorResource(R.color.dark_color),
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
+
                 items(addItems.size) { index ->
                     val addItem = addItems[index]
-                    AddItemCheckComponent(addItem)
-                    if (index < addItems.lastIndex) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(0.5.dp)
-                                .background(colorResource(R.color.dark_color))
-                        )
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        AddItemCheckComponent(addItem)
                     }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "OBSERVAÇÕES",
-            fontFamily = FontFamily(Font(R.font.dinnext_medium)),
-            color = colorResource(R.color.dark_color),
-            fontSize = 18.sp
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        var isFocused by remember { mutableStateOf(false) }
-        var text by remember { mutableStateOf("") }
-        TextField(
-            placeholder = { Text(text = "Digite aqui...", color = Color.Gray) },
-            value = text,
-            onValueChange = { text = it },
-            modifier = Modifier
-                .width(450.dp)
-                .border(
-                    width = 1.dp,
-                    color = if (isFocused) colorResource(R.color.primary_orange) else colorResource(
-                        R.color.dark_color
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .onFocusChanged { isFocused = it.isFocused },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(6.dp)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = {
 
-            },
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.primary_orange)
-            )
-        ) {
-            Text(
-                text = "Adicionar ao carrinho",
-                color = Color.White
-            )
+            item {
+                var observation by remember { mutableStateOf("") }
+
+                Spacer(modifier = Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_comment),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(14.dp)
+                        )
+                        Text(
+                            text = "Alguma observação?",
+                            color = colorResource(R.color.dark_color),
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                    Text(
+                        text = "${observation.length}/140",
+                        color = colorResource(R.color.dark_color),
+                        fontSize = 14.sp,
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = observation,
+                    onValueChange = {
+                        if (it.length <= 140) observation = it
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    placeholder = {
+                        Text("Ex: sem cebola, ponto da carne, etc.", fontSize = 14.sp)
+                    },
+                    maxLines = 4,
+                    singleLine = false,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedTextColor = Color.DarkGray,
+                        unfocusedTextColor = Color.DarkGray,
+                        cursorColor = Color.Gray,
+                        focusedPlaceholderColor = Color.Gray,
+                        unfocusedPlaceholderColor = Color.Gray,
+                        disabledPlaceholderColor = Color.Gray,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent
+                    ),
+                    textStyle = TextStyle(fontSize = 14.sp)
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(
+                    color = colorResource(R.color.divider_color), thickness = 1.dp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.primary_orange)
+                    ),
+                    contentPadding = PaddingValues(vertical = 14.dp)
+                ) {
+                    Text(
+                        text = "Adicionar ao Carrinho  |  R$ 49,90",
+                        color = Color.White,
+                        fontSize = 16.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+
+            }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun DialogContentPreview() {
+    val product = Product(
+        name = "Risoto de Tomatte",
+        description = "Coberto de tomates cereja ao molho de gorgonzola, com páprica picante no ponto certo. Acompanha um cordeiro, bife ao ponto, sem mais nem menos.",
+        price = 2.99,
+        addItems = listOf(
+            AddItem("Batata", 10.0),
+            AddItem("Batata", 10.0)
+        )
+    )
+    DialogContent(product)
 }

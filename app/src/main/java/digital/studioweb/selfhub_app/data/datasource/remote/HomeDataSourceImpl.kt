@@ -2,7 +2,7 @@ package digital.studioweb.selfhub_app.data.datasource.remote
 
 import android.util.Log
 import digital.studioweb.selfhub_app.data.datasource.firebase.FirebaseService
-import digital.studioweb.selfhub_app.data.models.AddItems
+import digital.studioweb.selfhub_app.data.models.AddItem
 import digital.studioweb.selfhub_app.data.models.MenuCategoryItem
 import digital.studioweb.selfhub_app.data.models.Product
 import digital.studioweb.selfhub_app.data.utils.FirebaseUtils.FIREBASE_CATEGORIES_COLLECTION_NAME
@@ -47,7 +47,7 @@ class HomeDataSourceImpl @Inject constructor(
                     document.data?.let { data ->
                         val addItemsList = (data["addItems"] as? List<*>)?.mapNotNull { item ->
                             (item as? Map<*, *>)?.let { map ->
-                                AddItems(
+                                AddItem(
                                     name = map["name"] as? String ?: "",
                                     price = (map["price"] as? Number)?.toDouble() ?: 0.0
                                 )

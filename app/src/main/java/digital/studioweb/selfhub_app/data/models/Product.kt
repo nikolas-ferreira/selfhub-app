@@ -8,11 +8,11 @@ data class Product(
     val iconUrl: String = "",
     val name: String = "",
     val description: String = "",
-    var addItems: List<AddItems>? = emptyList(),
+    var addItems: List<AddItem>? = emptyList(),
     val price: Double = 0.0,
 )
 
-data class AddItems(
+data class AddItem(
     val name: String = "",
     val price: Double = 0.0
 )
