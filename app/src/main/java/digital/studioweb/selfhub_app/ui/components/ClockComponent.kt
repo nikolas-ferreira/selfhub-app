@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import digital.studioweb.selfhub_app.R
+import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatCurrentTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -69,10 +70,4 @@ fun ClockComponent() {
             Spacer(modifier = Modifier.width(12.dp))
         }
     }
-}
-
-private fun formatCurrentTime(): String {
-    val now = LocalTime.now()
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-    return now.format(timeFormatter)
 }

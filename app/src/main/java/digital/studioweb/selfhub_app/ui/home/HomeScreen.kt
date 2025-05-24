@@ -1,5 +1,6 @@
 package digital.studioweb.selfhub_app.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,23 +25,28 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.data.models.Category
 import digital.studioweb.selfhub_app.data.models.Product
-import digital.studioweb.selfhub_app.ui.components.CalendarComponent
 import digital.studioweb.selfhub_app.ui.components.CartButton
 import digital.studioweb.selfhub_app.ui.components.CartComponent
-import digital.studioweb.selfhub_app.ui.components.ClockComponent
 import digital.studioweb.selfhub_app.ui.home.components.DualDrawerLayout
+import digital.studioweb.selfhub_app.ui.home.components.EditTextComponent
 import digital.studioweb.selfhub_app.ui.home.components.MenuCategoryItemComponent
 import digital.studioweb.selfhub_app.ui.home.components.ProductComponent
 import digital.studioweb.selfhub_app.ui.home.components.SideBarComponent
+import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatCurrentDate
+import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatCurrentTime
 
 @Composable
 fun HomeScreen() {
@@ -104,6 +110,8 @@ fun HomeSuccessContent(
     val scrollState = rememberScrollState()
     var displayedProducts by remember { mutableStateOf(allProducts) }
     var selectedSidebarIndex by remember { mutableIntStateOf(0) }  // índice do sidebar selecionado
+    var currentTime by remember { mutableStateOf(formatCurrentTime()) }
+    var searchText by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -120,15 +128,19 @@ fun HomeSuccessContent(
                         selectedItemIndex = -1
                         displayedProducts = allProducts
                     }
+
                     1 -> {
                         // Lógica para pedidos
                     }
+
                     2 -> {
                         // Lógica para garçom
                     }
+
                     3 -> {
                         // Lógica para configurações
                     }
+
                     else -> {
                         // Caso padrão ou nada
                     }
@@ -140,18 +152,66 @@ fun HomeSuccessContent(
                 .padding(start = 36.dp, top = 24.dp, end = 24.dp)
         ) {
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row {
-                    CalendarComponent()
-                    Spacer(modifier = Modifier.width(8.dp))
-                    ClockComponent()
+                Column {
+                    Text("SelfHub Restaurant", color = White, fontSize = 22.sp)
+                    Row(
+                        Modifier.padding(top = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_calendar),
+                            colorFilter = ColorFilter.tint(
+                                colorResource(
+                                    id = R.color.primary_orange
+                                )
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(formatCurrentDate(), color = White, fontSize = 14.sp)
+                    }
+                    Row(
+                        Modifier.padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_clock),
+                            colorFilter = ColorFilter.tint(
+                                colorResource(
+                                    id = R.color.primary_orange
+                                )
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(currentTime, color = White, fontSize = 14.sp)
+                        Spacer(modifier = Modifier.width(12.dp))
+                    }
+//                Row {
+//                    CalendarComponent()
+//                    Spacer(modifier = Modifier.width(8.dp))
+//                    ClockComponent()
+//                }
+//
                 }
-
                 CartButton(onClick = onCartClick)
-            }
 
+            }
+            Spacer(Modifier.size(38.dp))
+            EditTextComponent(
+                value = searchText,
+                onValueChange = {searchText = it},
+                placeholder = "Buscar produto por nome..."
+            )
+            Spacer(Modifier.size(24.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -206,7 +266,8 @@ fun HomeSuccessContent(
 @Composable
 fun HomeSuccessContentPreview() {
     val mockCategories = listOf(
-        Category("1",
+        Category(
+            "1",
             name = "Lanches",
             iconUrl = "",
             createdAt = "",
@@ -214,7 +275,8 @@ fun HomeSuccessContentPreview() {
             restaurantId = "1",
             lastEditedById = ""
         ),
-        Category("2",
+        Category(
+            "2",
             name = "Bebidas",
             iconUrl = "",
             createdAt = "",
@@ -225,7 +287,8 @@ fun HomeSuccessContentPreview() {
     )
 
     val mockProducts = listOf(
-        Product("1",
+        Product(
+            "1",
             name = "X-Burger",
             price = 12.99,
             imageUrl = "",
@@ -236,7 +299,8 @@ fun HomeSuccessContentPreview() {
             createdById = "",
             lastEditedById = ""
         ),
-        Product("2",
+        Product(
+            "2",
             name = "Coca-Cola",
             price = 6.50,
             imageUrl = "https://trxis.com.br/media/trxis%20fil%C3%A9.jpg",

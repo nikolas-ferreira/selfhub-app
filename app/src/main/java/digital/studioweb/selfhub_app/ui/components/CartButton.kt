@@ -31,7 +31,7 @@ fun CartButton(
     Box(
         modifier = Modifier
             .height(45.dp)
-            .background(Color.White, shape = RoundedCornerShape(50.dp))
+            .background(colorResource(R.color.product_component_card_background), shape = RoundedCornerShape(50.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
@@ -39,7 +39,7 @@ fun CartButton(
             Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Carrinho")
+            Text("Carrinho", color = Color.White)
             Spacer(modifier = Modifier.width(12.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_cart),

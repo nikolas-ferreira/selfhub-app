@@ -10,6 +10,11 @@
     <color name="dark_color">#141414</color>
     <color name="primary_orange">#EA7C69</color>
 
+    <!--    Edit Text-->
+    <color name="edit_text_background">#2D303E</color>"
+    <color name="edit_text_border">#393C49</color>"
+    <color name="edit_text_text">#ABBBC2</color>"
+
     <!--    Colors for Text components-->
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
