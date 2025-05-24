@@ -4,61 +4,86 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import digital.studioweb.selfhub_app.data.datasource.firebase.FirebaseService
-import digital.studioweb.selfhub_app.data.datasource.firebase.FirebaseServiceImpl
-import digital.studioweb.selfhub_app.data.datasource.remote.HomeDataSource
-import digital.studioweb.selfhub_app.data.datasource.remote.HomeDataSourceImpl
-import digital.studioweb.selfhub_app.data.repositories.HomeRepository
-import digital.studioweb.selfhub_app.data.repositories.HomeRepositoryImpl
-import digital.studioweb.selfhub_app.data.usecases.FilterProductsByCategoryUseCase
-import digital.studioweb.selfhub_app.data.usecases.GetMenuCategoriesUseCase
+import digital.studioweb.selfhub_app.data.repositories.auth.AuthRepository
+import digital.studioweb.selfhub_app.data.repositories.auth.AuthRepositoryImpl
+import digital.studioweb.selfhub_app.data.repositories.home.HomeRepository
+import digital.studioweb.selfhub_app.data.repositories.home.HomeRepositoryImpl
+import digital.studioweb.selfhub_app.data.service.ApiService
+import digital.studioweb.selfhub_app.data.usecases.GetCategoriesUseCase
 import digital.studioweb.selfhub_app.data.usecases.GetProductsUseCase
+import digital.studioweb.selfhub_app.data.usecases.LoginUseCase
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    fun provideBaseUrl() = "https://selfhub-backend-dcf8eec84eed.herokuapp.com/"
+
     @Provides
     @Singleton
-    fun provideFirebaseService(): FirebaseService {
-        return FirebaseServiceImpl()
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
     }
 
     @Provides
     @Singleton
-    fun provideHomeDataSource(
-        firebaseService: FirebaseService
-    ): HomeDataSource {
-        return HomeDataSourceImpl(firebaseService)
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideHomeRepository(
-        homeDataSource: HomeDataSource
-    ): HomeRepository {
-        return HomeRepositoryImpl(homeDataSource)
+    fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideGetMenuCategoriesUseCase(
-        homeRepository: HomeRepository
-    ): GetMenuCategoriesUseCase {
-        return GetMenuCategoriesUseCase(homeRepository)
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideGetProductsUseCase(
-        homeRepository: HomeRepository
-    ): GetProductsUseCase {
+    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
+        return LoginUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(apiService: ApiService): AuthRepository {
+        return AuthRepositoryImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(apiService: ApiService): HomeRepository {
+        return HomeRepositoryImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCategoriesUseCase(homeRepository: HomeRepository): GetCategoriesUseCase {
+        return GetCategoriesUseCase(homeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetProductsUseCase(homeRepository: HomeRepository): GetProductsUseCase {
         return GetProductsUseCase(homeRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideFilterProductsByCategoryUseCase(): FilterProductsByCategoryUseCase {
-        return FilterProductsByCategoryUseCase()
     }
 }

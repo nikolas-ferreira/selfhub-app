@@ -1,17 +1,17 @@
 package digital.studioweb.selfhub_app.data.usecases
 
-import digital.studioweb.selfhub_app.data.models.Product
+import digital.studioweb.selfhub_app.data.models.Category
 import digital.studioweb.selfhub_app.data.repositories.home.HomeRepository
 import digital.studioweb.selfhub_app.data.utils.Result
 import javax.inject.Inject
 
-class GetProductsUseCase @Inject constructor(
+class GetCategoriesUseCase @Inject constructor(
     private val homeRepository: HomeRepository
 ) {
-    suspend operator fun invoke(): Result<List<Product>> {
+    suspend operator fun invoke(): Result<List<Category>> {
         return try {
-            val products = homeRepository.getAllProducts()
-            Result.Success(products)
+            val categories = homeRepository.getCategories()
+            Result.Success(categories)
         } catch (e: Exception) {
             Result.Error(e)
         }

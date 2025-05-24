@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +7,13 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+}
+
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -22,6 +31,23 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        buildConfigField(
+            "String",
+            "SUPABASE_ANON_KEY",
+            "\"${localProperties.getProperty("SUPABASE_ANON_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "SECRET",
+            "\"${localProperties.getProperty("SECRET")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${localProperties.getProperty("SUPABASE_URL")}\""
+        )
     }
 
     buildTypes {
@@ -42,6 +68,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
@@ -85,4 +112,14 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.hilt.navigation.compose)
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("io.coil-kt:coil-compose:2.5.0") // ou a versão mais recente
+
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 }

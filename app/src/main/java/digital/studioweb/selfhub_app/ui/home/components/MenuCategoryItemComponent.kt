@@ -39,28 +39,22 @@ fun MenuCategoryItemComponent(
         colorResource(id = R.color.menu_category_item_card_unselected_background)
     }
 
-    val iconTint = if (isSelected) {
-        colorResource(id = R.color.white)
-    } else {
-        colorResource(id = R.color.dark_color)
-    }
-
     val textColor = if (isSelected) {
         colorResource(id = R.color.white)
     } else {
-        colorResource(id = R.color.dark_color)
+        colorResource(id = R.color.white)
     }
 
     Surface(
         modifier = Modifier
-            .width(160.dp)
+            .size(120.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(6.dp),
+        shape = RoundedCornerShape(12.dp),
         color = backgroundColor
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -69,12 +63,10 @@ fun MenuCategoryItemComponent(
             Image(
                 painter = painterResource(menuCategoryIcon),
                 contentDescription = "Imagem",
-                colorFilter = ColorFilter.tint(iconTint),
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(80.dp)
             )
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                fontSize = 10.sp,
+                fontSize = 16.sp,
                 text = menuCategoryName,
                 maxLines = 1,
                 color = textColor
@@ -90,14 +82,14 @@ private fun Preview() {
     Column(Modifier.padding(20.dp)) {
         MenuCategoryItemComponent(
             isSelected = true,
-            menuCategoryIcon = R.drawable.ic_menu_category,
+            menuCategoryIcon = R.drawable.hamburguer,
             menuCategoryName = "Todos Itens",
             onClick = {}
         )
         Spacer(modifier = Modifier.height(20.dp))
         MenuCategoryItemComponent(
             isSelected = false,
-            menuCategoryIcon = R.drawable.ic_menu_category,
+            menuCategoryIcon = R.drawable.hamburguer,
             menuCategoryName = "Todos Itens",
             onClick = {}
         )

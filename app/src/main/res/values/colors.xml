@@ -3,12 +3,12 @@
     <!--    App default colors-->
     <color name="app_default_primary_color">#FFBB86FC</color>
     <color name="app_default_second_color">#FF6200EE</color>
-    <color name="app_background">#F8F8F8</color>
+    <color name="app_background">#252836</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="divider_color">#98EBEBEB</color>
     <color name="dark_color">#141414</color>
-    <color name="primary_orange">#F26801</color>
+    <color name="primary_orange">#EA7C69</color>
 
     <!--    Colors for Text components-->
     <color name="purple_700">#FF3700B3</color>
@@ -21,10 +21,10 @@
     <color name="rounded_button_backgroud">#F2EFDB</color>
 
     <!--    Menu Category Item Component-->
-    <color name="menu_category_item_card_unselected_background">#F6F6F6</color>
-    <color name="menu_category_item_card_selected_background">#FF8B08</color>
-    <color name="menu_category_item_card_selected_border">#FF8B08</color>
-    <color name="menu_category_item_card_unselected_border">#F6F6F6</color>
+    <color name="menu_category_item_card_unselected_background">#1F1D2B</color>
+    <color name="menu_category_item_card_selected_background">#EA7C69</color>
+    <color name="menu_category_item_card_selected_border">#EA7C69</color>
+    <color name="menu_category_item_card_unselected_border">#1F1D2B</color>
 
     <!--    Icon Menu Category Item Component-->
     <color name="icon_menu_category_item_card_selected_background">#2D71F8</color>
@@ -37,10 +37,21 @@
     <color name="search_bar_border">#FFFFFF</color>
 
     <!--    Product Component-->
-    <color name="product_component_card_background">#FFFFFF</color>
+    <color name="product_component_card_background">#1f1d2b</color>
     <color name="product_component_photo_background">#141414</color>
-    <color name="product_component_order_button_background">#FD9E53</color>
+    <color name="product_component_order_button_background">#EA7C69</color>
 
     <!--    Add Item Component-->
     <color name="add_item_component_background">#F7F7F7</color>
+
+    <!--    Side Bar Component-->
+    <color name="side_bar_background">#1F1D2B</color>
+    <color name="side_bar_icon_selected_background">#FDF7E7</color>
+    <color name="side_bar_icon_selected_border">#E3B52E</color>
+    <color name="side_bar_icon_unselected_background">#FFFFFF</color>
+    <color name="side_bar_icon_unselected_border">#FFFFFF</color>
+    <color name="side_bar_icon_selected_text_color">#E3B52E</color>
+    <color name="side_bar_icon_unselected_text_color">#A8A8A8</color>
+    <color name="side_bar_icon_selected_color">#E3B52E</color>
+    <color name="side_bar_icon_unselected_color">#A8A8A8</color>
 </resources>

@@ -52,8 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
 import digital.studioweb.selfhub_app.R
-import digital.studioweb.selfhub_app.data.models.AddItem
 import digital.studioweb.selfhub_app.data.models.Product
 import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatToBRLCurrency
 
@@ -103,14 +103,14 @@ fun ProductComponent(product: Product) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Image(
-                    painter = painterResource(R.drawable.risoto),
-                    contentScale = ContentScale.Crop,
+                AsyncImage(
+                    model = product.imageUrl,
                     contentDescription = "",
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(140.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                 )
             }
             Column(modifier = Modifier.padding(8.dp)) {
@@ -193,7 +193,7 @@ private fun DialogContent(product: Product) {
                             fontSize = 24.sp,
                             color = Color.DarkGray
                         )
-                        ProductCount()
+//                        ProductCount()
                     }
                     Text(
                         text = formatToBRLCurrency(49.99),
@@ -213,133 +213,116 @@ private fun DialogContent(product: Product) {
                 }
             }
 
-            product.addItems?.let { addItems ->
-                item {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        Text(
-                            text = "ADICIONAIS",
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.dinnext_medium))
-                            ),
-                            color = colorResource(R.color.dark_color),
-                            fontSize = 18.sp
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-                }
+//            product.addItems?.let { addItems ->
+//                item {
+//                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+//                        Text(
+//                            text = "ADICIONAIS",
+//                            style = TextStyle(
+//                                fontFamily = FontFamily(Font(R.font.dinnext_medium))
+//                            ),
+//                            color = colorResource(R.color.dark_color),
+//                            fontSize = 18.sp
+//                        )
+//                        Spacer(modifier = Modifier.height(12.dp))
+//                    }
+//                }
 
-                items(addItems.size) { index ->
-                    val addItem = addItems[index]
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        AddItemCheckComponent(addItem)
-                    }
-                }
-            }
-
-            item {
-                var observation by remember { mutableStateOf("") }
-
-                Spacer(modifier = Modifier.height(24.dp))
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_comment),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(14.dp)
-                        )
-                        Text(
-                            text = "Alguma observação?",
-                            color = colorResource(R.color.dark_color),
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    Text(
-                        text = "${observation.length}/140",
-                        color = colorResource(R.color.dark_color),
-                        fontSize = 14.sp,
-                    )
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = observation,
-                    onValueChange = {
-                        if (it.length <= 140) observation = it
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    placeholder = {
-                        Text("Ex: sem cebola, ponto da carne, etc.", fontSize = 14.sp)
-                    },
-                    maxLines = 4,
-                    singleLine = false,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.LightGray,
-                        unfocusedBorderColor = Color.LightGray,
-                        focusedTextColor = Color.DarkGray,
-                        unfocusedTextColor = Color.DarkGray,
-                        cursorColor = Color.Gray,
-                        focusedPlaceholderColor = Color.Gray,
-                        unfocusedPlaceholderColor = Color.Gray,
-                        disabledPlaceholderColor = Color.Gray,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent
-                    ),
-                    textStyle = TextStyle(fontSize = 14.sp)
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(
-                    color = colorResource(R.color.divider_color), thickness = 1.dp
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.primary_orange)
-                    ),
-                    contentPadding = PaddingValues(vertical = 14.dp)
-                ) {
-                    Text(
-                        text = "Adicionar ao Carrinho  |  R$ 49,90",
-                        color = Color.White,
-                        fontSize = 16.sp
-                    )
-                }
-                Spacer(modifier = Modifier.height(32.dp))
-
-            }
+//                items(addItems.size) { index ->
+//                    val addItem = addItems[index]
+//                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+//                        AddItemCheckComponent(addItem)
+//                    }
+//                }
         }
+//
+//            item {
+//                var observation by remember { mutableStateOf("") }
+//
+//                Spacer(modifier = Modifier.height(24.dp))
+//                Row(
+//                    modifier = Modifier
+//                        .padding(horizontal = 16.dp)
+//                        .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    Row(verticalAlignment = Alignment.CenterVertically) {
+//                        Image(
+//                            painter = painterResource(R.drawable.ic_comment),
+//                            contentDescription = "",
+//                            modifier = Modifier
+//                                .size(14.dp)
+//                        )
+//                        Text(
+//                            text = "Alguma observação?",
+//                            color = colorResource(R.color.dark_color),
+//                            fontSize = 14.sp,
+//                            modifier = Modifier.padding(start = 8.dp)
+//                        )
+//                    }
+//                    Text(
+//                        text = "${observation.length}/140",
+//                        color = colorResource(R.color.dark_color),
+//                        fontSize = 14.sp,
+//                    )
+//                }
+//                Spacer(modifier = Modifier.height(12.dp))
+//                OutlinedTextField(
+//                    value = observation,
+//                    onValueChange = {
+//                        if (it.length <= 140) observation = it
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp),
+//                    placeholder = {
+//                        Text("Ex: sem cebola, ponto da carne, etc.", fontSize = 14.sp)
+//                    },
+//                    maxLines = 4,
+//                    singleLine = false,
+//                    shape = RoundedCornerShape(8.dp),
+//                    colors = OutlinedTextFieldDefaults.colors(
+//                        focusedBorderColor = Color.LightGray,
+//                        unfocusedBorderColor = Color.LightGray,
+//                        focusedTextColor = Color.DarkGray,
+//                        unfocusedTextColor = Color.DarkGray,
+//                        cursorColor = Color.Gray,
+//                        focusedPlaceholderColor = Color.Gray,
+//                        unfocusedPlaceholderColor = Color.Gray,
+//                        disabledPlaceholderColor = Color.Gray,
+//                        focusedContainerColor = Color.Transparent,
+//                        unfocusedContainerColor = Color.Transparent
+//                    ),
+//                    textStyle = TextStyle(fontSize = 14.sp)
+//                )
+//            }
+//            item {
+//                Spacer(modifier = Modifier.height(16.dp))
+//                HorizontalDivider(
+//                    color = colorResource(R.color.divider_color), thickness = 1.dp
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Button(
+//                    onClick = {
+//
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp),
+//                    shape = RoundedCornerShape(12.dp),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = colorResource(R.color.primary_orange)
+//                    ),
+//                    contentPadding = PaddingValues(vertical = 14.dp)
+//                ) {
+//                    Text(
+//                        text = "Adicionar ao Carrinho  |  R$ 49,90",
+//                        color = Color.White,
+//                        fontSize = 16.sp
+//                    )
+//                }
+//                Spacer(modifier = Modifier.height(32.dp))
+//
+//            }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun DialogContentPreview() {
-    val product = Product(
-        name = "Risoto de Tomatte",
-        description = "Coberto de tomates cereja ao molho de gorgonzola, com páprica picante no ponto certo. Acompanha um cordeiro, bife ao ponto, sem mais nem menos.",
-        price = 2.99,
-        addItems = listOf(
-            AddItem("Batata", 10.0),
-            AddItem("Batata", 10.0)
-        )
-    )
-    DialogContent(product)
 }

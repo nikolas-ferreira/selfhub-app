@@ -38,7 +38,7 @@ fun ClockComponent() {
     LaunchedEffect(Unit) {
         while(true) {
             currentTime = formatCurrentTime()
-            delay(1000) // Update every second
+            delay(1000)
         }
     }
     
