@@ -34,7 +34,10 @@ data class ProductDTO(
     val createdById: String,
 
     @SerialName("lastEditedById")
-    val lastEditedById: String
+    val lastEditedById: String,
+
+    @SerialName("customizationGroups")
+    val customizationGroups: List<CustomizationGroupDTO>
 ) {
     fun mapTo(): Product {
         return Product(
@@ -47,7 +50,8 @@ data class ProductDTO(
             updatedAt = updatedAt,
             categoryId = categoryId,
             createdById = createdById,
-            lastEditedById = lastEditedById
+            lastEditedById = lastEditedById,
+            customizationGroups = customizationGroups.map { it.mapTo() }
         )
     }
 }

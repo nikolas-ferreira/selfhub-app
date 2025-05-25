@@ -10,5 +10,6 @@ data class Product(
     val updatedAt: String,
     val categoryId: String,
     val createdById: String,
-    val lastEditedById: String
+    val lastEditedById: String,
+    val customizationGroups: List<CustomizationGroup>
 )

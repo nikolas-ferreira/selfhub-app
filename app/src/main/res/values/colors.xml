@@ -10,6 +10,19 @@
     <color name="dark_color">#141414</color>
     <color name="primary_orange">#EA7C69</color>
 
+
+    <!--    Whites-->
+    <color name="white_pure">#FFFFFF</color>
+    <color name="white_off">#FAFAFA</color>
+    <color name="white_snow">#F8F9FA</color>
+    <color name="white_ivory">#FFFFF0</color>
+    <color name="white_ghost">#F8F8FF</color>
+    <color name="white_smoke">#F5F5F5</color>
+    <color name="white_linen">#FDF5E6</color>
+    <color name="white_seashell">#FFF5EE</color>
+    <color name="white_baby_powder">#FEFEFA</color>
+    <color name="white_alabaster">#FCFCFC</color>
+
     <!--    Edit Text-->
     <color name="edit_text_background">#2D303E</color>"
     <color name="edit_text_border">#393C49</color>"

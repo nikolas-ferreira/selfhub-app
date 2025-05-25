@@ -64,7 +64,7 @@ fun ProductComponent(product: Product) {
             ),
             onDismissRequest = { closeModal() }
         ) {
-            DialogContent(product)
+            ProductDialogContent(product)
         }
     }
 
@@ -146,176 +146,9 @@ fun ProductComponent(product: Product) {
     }
 }
 
-@Composable
-private fun DialogContent(product: Product) {
-    Column(
-        modifier = Modifier
-            .width(600.dp)
-            .fillMaxHeight()
-            .padding(16.dp)
-            .background(Color.White, RoundedCornerShape(16.dp))
-    ) {
-        LazyColumn {
-            item {
-                Image(
-                    painter = painterResource(R.drawable.risoto),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                        .height(350.dp)
-                )
-            }
-            item {
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Spacer(modifier = Modifier.height(26.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Risoto de Tomatte",
-                            fontSize = 24.sp,
-                            color = Color.DarkGray
-                        )
-//                        ProductCount()
-                    }
-                    Text(
-                        text = formatToBRLCurrency(49.99),
-                        color = colorResource(R.color.dark_color),
-                        fontSize = 22.sp,
-                    )
-                    Spacer(modifier = Modifier.height(26.dp))
-                    ProductDetailsComponent()
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        lineHeight = 18.sp,
-                        text = "Risoto à Tomatto, uma verdadeira especialidade da casa.\nCoberto de tomates cereja ao molho de gorgonzola, com páprica picante no ponto certo. Acompanha um cordeiro, bife ao ponto, sem mais nem menos.\nExcelente escolha para quem quer um jantar sofisticado e leve.",
-                        color = Color.Gray,
-                        fontSize = 12.sp
-                    )
-                    Spacer(modifier = Modifier.height(26.dp))
-                }
-            }
-
-//            product.addItems?.let { addItems ->
-//                item {
-//                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-//                        Text(
-//                            text = "ADICIONAIS",
-//                            style = TextStyle(
-//                                fontFamily = FontFamily(Font(R.font.dinnext_medium))
-//                            ),
-//                            color = colorResource(R.color.dark_color),
-//                            fontSize = 18.sp
-//                        )
-//                        Spacer(modifier = Modifier.height(12.dp))
-//                    }
-//                }
-
-//                items(addItems.size) { index ->
-//                    val addItem = addItems[index]
-//                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-//                        AddItemCheckComponent(addItem)
-//                    }
-//                }
-        }
-//
-//            item {
-//                var observation by remember { mutableStateOf("") }
-//
-//                Spacer(modifier = Modifier.height(24.dp))
-//                Row(
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp)
-//                        .fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                ) {
-//                    Row(verticalAlignment = Alignment.CenterVertically) {
-//                        Image(
-//                            painter = painterResource(R.drawable.ic_comment),
-//                            contentDescription = "",
-//                            modifier = Modifier
-//                                .size(14.dp)
-//                        )
-//                        Text(
-//                            text = "Alguma observação?",
-//                            color = colorResource(R.color.dark_color),
-//                            fontSize = 14.sp,
-//                            modifier = Modifier.padding(start = 8.dp)
-//                        )
-//                    }
-//                    Text(
-//                        text = "${observation.length}/140",
-//                        color = colorResource(R.color.dark_color),
-//                        fontSize = 14.sp,
-//                    )
-//                }
-//                Spacer(modifier = Modifier.height(12.dp))
-//                OutlinedTextField(
-//                    value = observation,
-//                    onValueChange = {
-//                        if (it.length <= 140) observation = it
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 16.dp),
-//                    placeholder = {
-//                        Text("Ex: sem cebola, ponto da carne, etc.", fontSize = 14.sp)
-//                    },
-//                    maxLines = 4,
-//                    singleLine = false,
-//                    shape = RoundedCornerShape(8.dp),
-//                    colors = OutlinedTextFieldDefaults.colors(
-//                        focusedBorderColor = Color.LightGray,
-//                        unfocusedBorderColor = Color.LightGray,
-//                        focusedTextColor = Color.DarkGray,
-//                        unfocusedTextColor = Color.DarkGray,
-//                        cursorColor = Color.Gray,
-//                        focusedPlaceholderColor = Color.Gray,
-//                        unfocusedPlaceholderColor = Color.Gray,
-//                        disabledPlaceholderColor = Color.Gray,
-//                        focusedContainerColor = Color.Transparent,
-//                        unfocusedContainerColor = Color.Transparent
-//                    ),
-//                    textStyle = TextStyle(fontSize = 14.sp)
-//                )
-//            }
-//            item {
-//                Spacer(modifier = Modifier.height(16.dp))
-//                HorizontalDivider(
-//                    color = colorResource(R.color.divider_color), thickness = 1.dp
-//                )
-//                Spacer(modifier = Modifier.height(16.dp))
-//                Button(
-//                    onClick = {
-//
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 16.dp),
-//                    shape = RoundedCornerShape(12.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = colorResource(R.color.primary_orange)
-//                    ),
-//                    contentPadding = PaddingValues(vertical = 14.dp)
-//                ) {
-//                    Text(
-//                        text = "Adicionar ao Carrinho  |  R$ 49,90",
-//                        color = Color.White,
-//                        fontSize = 16.sp
-//                    )
-//                }
-//                Spacer(modifier = Modifier.height(32.dp))
-//
-//            }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun ProductComponentPreview() {
+private fun ProductComponentPreview() {
     val mockProduct = Product(
         id = "1",
         name = "Risoto de Tomate",
@@ -326,7 +159,8 @@ fun ProductComponentPreview() {
         updatedAt = "2024-01-01T00:00:00Z",
         categoryId = "cat01",
         createdById = "admin01",
-        lastEditedById = "admin01"
+        lastEditedById = "admin01",
+        customizationGroups = emptyList()
     )
 
     ProductComponent(product = mockProduct)

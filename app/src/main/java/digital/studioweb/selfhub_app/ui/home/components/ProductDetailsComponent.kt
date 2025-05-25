@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import digital.studioweb.selfhub_app.R
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFF172134)
 @Composable
 fun ProductDetailsComponent() {
     Row(
@@ -45,7 +45,7 @@ private fun Item(
     ) {
         Text(
             text = title,
-            color = colorResource(R.color.dark_color),
+            color = colorResource(R.color.white_smoke),
             fontSize = 12.sp
         )
 
@@ -60,7 +60,7 @@ private fun Item(
             )
             Text(
                 text = description,
-                color = colorResource(R.color.dark_color), fontSize = 12.sp
+                color = colorResource(R.color.white_smoke), fontSize = 12.sp
             )
         }
     }

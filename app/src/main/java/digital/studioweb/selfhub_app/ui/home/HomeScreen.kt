@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,7 @@ import digital.studioweb.selfhub_app.ui.home.components.ProductComponent
 import digital.studioweb.selfhub_app.ui.home.components.SideBarComponent
 import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatCurrentDate
 import digital.studioweb.selfhub_app.ui.utils.StringUtils.formatCurrentTime
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen() {
@@ -82,7 +84,7 @@ fun HomeLoadingContent() {
         modifier = Modifier
             .fillMaxSize()
             .background(White),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+        contentAlignment = Alignment.Center
     ) {
         Text("Loading...")
     }
@@ -94,7 +96,7 @@ fun HomeErrorContent() {
         modifier = Modifier
             .fillMaxSize()
             .background(White),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+        contentAlignment = Alignment.Center
     ) {
         Text("Erro ao carregar dados")
     }
@@ -108,10 +110,32 @@ fun HomeSuccessContent(
 ) {
     var selectedItemIndex by remember { mutableIntStateOf(-1) }
     val scrollState = rememberScrollState()
-    var displayedProducts by remember { mutableStateOf(allProducts) }
-    var selectedSidebarIndex by remember { mutableIntStateOf(0) }  // índice do sidebar selecionado
+    var selectedSidebarIndex by remember { mutableIntStateOf(0) }
     var currentTime by remember { mutableStateOf(formatCurrentTime()) }
+
     var searchText by remember { mutableStateOf("") }
+    var displayedProducts by remember { mutableStateOf(allProducts) }
+
+    LaunchedEffect(Unit) {
+        while(true) {
+            currentTime = formatCurrentTime()
+            delay(1000)
+        }
+    }
+
+    fun updateDisplayedProducts() {
+        displayedProducts = if (searchText.isBlank()) {
+            if (selectedItemIndex == -1) allProducts
+            else allProducts.filter { it.categoryId == categories.getOrNull(selectedItemIndex)?.id }
+        } else {
+            val filtered = allProducts.filter {
+                it.name.contains(searchText, ignoreCase = true)
+            }
+            if (selectedItemIndex == -1) filtered
+            else filtered.filter { it.categoryId == categories.getOrNull(selectedItemIndex)?.id }
+        }
+    }
+
 
     Row(
         modifier = Modifier
@@ -208,9 +232,13 @@ fun HomeSuccessContent(
             Spacer(Modifier.size(38.dp))
             EditTextComponent(
                 value = searchText,
-                onValueChange = {searchText = it},
+                onValueChange = {
+                    searchText = it
+                    updateDisplayedProducts()
+                },
                 placeholder = "Buscar produto por nome..."
             )
+
             Spacer(Modifier.size(24.dp))
             Row(
                 modifier = Modifier
@@ -224,7 +252,7 @@ fun HomeSuccessContent(
                     menuCategoryIcon = R.drawable.hamburguer,
                     onClick = {
                         selectedItemIndex = -1
-                        displayedProducts = allProducts
+                        updateDisplayedProducts()
                     }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -236,7 +264,7 @@ fun HomeSuccessContent(
                         menuCategoryIcon = R.drawable.hamburguer,
                         onClick = {
                             selectedItemIndex = index
-                            displayedProducts = allProducts.filter { it.categoryId == category.id }
+                            updateDisplayedProducts()
                         }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -297,7 +325,8 @@ fun HomeSuccessContentPreview() {
             updatedAt = "",
             categoryId = "1",
             createdById = "",
-            lastEditedById = ""
+            lastEditedById = "",
+            customizationGroups = emptyList()
         ),
         Product(
             "2",
@@ -309,7 +338,8 @@ fun HomeSuccessContentPreview() {
             updatedAt = "",
             categoryId = "2",
             createdById = "",
-            lastEditedById = ""
+            lastEditedById = "",
+            customizationGroups = emptyList()
         )
     )
 
