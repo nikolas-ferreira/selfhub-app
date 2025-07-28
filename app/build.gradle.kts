@@ -99,7 +99,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
-
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.database.ktx)

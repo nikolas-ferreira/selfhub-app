@@ -4,14 +4,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import digital.studioweb.selfhub_app.data.repositories.auth.AuthRepository
-import digital.studioweb.selfhub_app.data.repositories.auth.AuthRepositoryImpl
-import digital.studioweb.selfhub_app.data.repositories.home.HomeRepository
-import digital.studioweb.selfhub_app.data.repositories.home.HomeRepositoryImpl
-import digital.studioweb.selfhub_app.data.service.ApiService
-import digital.studioweb.selfhub_app.data.usecases.GetCategoriesUseCase
-import digital.studioweb.selfhub_app.data.usecases.GetProductsUseCase
-import digital.studioweb.selfhub_app.data.usecases.LoginUseCase
+import digital.studioweb.selfhub_app.data.features.auth.AuthAPI
+import digital.studioweb.selfhub_app.data.features.auth.AuthRepositoryImpl
+import digital.studioweb.selfhub_app.data.features.home.HomeRepositoryImpl
+import digital.studioweb.selfhub_app.data.features.home.HomeAPI
+import digital.studioweb.selfhub_app.domain.features.auth.AuthRepository
+import digital.studioweb.selfhub_app.domain.features.auth.LoginUseCase
+import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCase
+import digital.studioweb.selfhub_app.domain.features.home.HomeGetProductsUseCase
+import digital.studioweb.selfhub_app.domain.features.home.HomeRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,6 +22,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    //region Retrofit
 
     @Provides
     fun provideBaseUrl() = "https://selfhub-backend-dcf8eec84eed.herokuapp.com/"
@@ -51,10 +54,20 @@ object AppModule {
             .build()
     }
 
+    //endregion
+
+    //region Auth
+
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun provideAuthAPI(retrofit: Retrofit): AuthAPI {
+        return retrofit.create(AuthAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(authAPI: AuthAPI): AuthRepository {
+        return AuthRepositoryImpl(authAPI)
     }
 
     @Provides
@@ -63,27 +76,33 @@ object AppModule {
         return LoginUseCase(authRepository)
     }
 
+    //endregion
+
+    //region Home
+
     @Provides
     @Singleton
-    fun provideAuthRepository(apiService: ApiService): AuthRepository {
-        return AuthRepositoryImpl(apiService)
+    fun provideHomeAPI(retrofit: Retrofit): HomeAPI {
+        return retrofit.create(HomeAPI::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideHomeRepository(apiService: ApiService): HomeRepository {
-        return HomeRepositoryImpl(apiService)
+    fun provideHomeRepository(homeAPI: HomeAPI): HomeRepository {
+        return HomeRepositoryImpl(homeAPI)
     }
 
     @Provides
     @Singleton
-    fun provideGetCategoriesUseCase(homeRepository: HomeRepository): GetCategoriesUseCase {
-        return GetCategoriesUseCase(homeRepository)
+    fun provideHomeGetCategoriesUseCase(homeRepository: HomeRepository): HomeGetCategoriesUseCase {
+        return HomeGetCategoriesUseCase(homeRepository)
     }
 
     @Provides
     @Singleton
-    fun provideGetProductsUseCase(homeRepository: HomeRepository): GetProductsUseCase {
-        return GetProductsUseCase(homeRepository)
+    fun provideHomeGetProductsUseCase(homeRepository: HomeRepository): HomeGetProductsUseCase {
+        return HomeGetProductsUseCase(homeRepository)
     }
+
+    //endregion
 }

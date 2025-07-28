@@ -12,8 +12,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
-import digital.studioweb.selfhub_app.ui.home.HomeScreen
-import digital.studioweb.selfhub_app.ui.theme.SelfHubAppTheme
+import digital.studioweb.selfhub_app.presentation.features.home.HomeScreen
+import digital.studioweb.selfhub_app.presentation.theme.SelfHubAppTheme
 
 
 @AndroidEntryPoint

@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">selfhub-app</string>
+    <string name="app_name">SelfHub App</string>
+
+    <!-- Home-->
+    <string name="home_search_edit_text_placeholder">Buscar produto por nome…</string>
+    <string name="home_category_list_all_items">Todos Itens</string>
+
+    <!-- Product Detail-->
+    <string name="product_detail_dialog_missing_group_validation">Selecione entre %s e %s itens</string>
+    <string name="product_detail_dialog_any_observation">Alguma observação?</string>
+    <string name="product_detail_dialog_observation_length">%s/140</string>
+    <string name="product_detail_dialog_observation_placeholder">Ex: sem cebola, ponto da carne, etc.</string>
+
 </resources>
