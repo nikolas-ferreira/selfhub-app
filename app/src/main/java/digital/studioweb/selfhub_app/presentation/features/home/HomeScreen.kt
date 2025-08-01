@@ -35,6 +35,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,6 +51,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
@@ -65,6 +68,7 @@ import digital.studioweb.selfhub_app.presentation.features.home.components.HomeP
 import digital.studioweb.selfhub_app.presentation.features.home.components.HomeSideBarComponent
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
+import digital.studioweb.selfhub_app.presentation.features.productdetails.ProductDetailsDialogComponent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -75,10 +79,8 @@ fun HomeScreen() {
         viewModel.init()
     }
 
-    val uiState = viewModel.uiState
-
     HomeScreenContent(
-        uiState = uiState,
+        uiState = viewModel.uiState,
         onEvent = viewModel::onEvent
     )
 }
@@ -187,6 +189,22 @@ private fun HomeSuccessContent(
         uiState.snackBarMessage?.let { message ->
             coroutineScope.launch {
                 snackBarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    if (uiState.showDialog && uiState.selectedProduct != null) {
+        val product = uiState.selectedProduct
+
+        key(product.id) {
+            Dialog(
+                onDismissRequest = { onEvent(HomeScreenEvent.CloseDialog) },
+                properties = DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    decorFitsSystemWindows = false
+                )
+            ) {
+                ProductDetailsDialogComponent(productModel = product)
             }
         }
     }
@@ -317,7 +335,12 @@ private fun HomeSuccessContent(
                                 if (uiState.isLoading) {
                                     HomeProductShimmerComponent()
                                 } else {
-                                    HomeProductComponent(productModel = uiState.displayedProducts[index])
+                                    val product = uiState.displayedProducts[index]
+                                    HomeProductComponent(
+                                        product = product,
+                                        uiState = uiState,
+                                        onEvent = onEvent
+                                    )
                                 }
                             }
                         }

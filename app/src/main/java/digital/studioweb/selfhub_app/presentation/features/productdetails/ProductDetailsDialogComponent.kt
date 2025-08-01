@@ -1,13 +1,26 @@
 package digital.studioweb.selfhub_app.presentation.features.productdetails
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,34 +34,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import digital.studioweb.selfhub_app.R
+import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationGroupModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationOptionModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
 import digital.studioweb.selfhub_app.presentation.features.home.HomeViewModel
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
-import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductCount
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.AddItemCheckComponent
+import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductCount
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductDetailsObservationInputComponent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsEvent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsUIState
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatToBRLCurrency
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
 fun ProductDetailsDialogComponent(
-    productModel: ProductModel
+    productModel: ProductModel?
 ) {
-    val viewModel: ProductDetailsViewModel = hiltViewModel()
+    productModel ?: return
+
+    val viewModel: ProductDetailsViewModel = hiltViewModel(key = productModel.id)
     val homeViewModel: HomeViewModel = hiltViewModel()
 
     val uiState = viewModel.uiState
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(productModel.id) {
         viewModel.onEvent(ProductDetailsEvent.Init(productModel))
     }
 
@@ -215,7 +228,7 @@ private fun ProductDetailsDialogContent(
                                 quantity = uiState.productQuantity
                             )
                             homeViewModel!!.onEvent(HomeScreenEvent.AddToCart(cartOrderItemModel))
-                            onEvent(ProductDetailsEvent.CloseDialog)
+                            homeViewModel.onEvent(HomeScreenEvent.CloseDialog)
                         }
                     },
                     modifier = Modifier

@@ -1,6 +1,5 @@
 package digital.studioweb.selfhub_app.presentation.features.home.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,8 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,39 +34,43 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
+import digital.studioweb.selfhub_app.presentation.features.home.HomeViewModel
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
 import digital.studioweb.selfhub_app.presentation.features.productdetails.ProductDetailsDialogComponent
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatToBRLCurrency
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeProductComponent(productModel: ProductModel) {
-    val openDialog = remember { mutableStateOf(false) }
+fun HomeProductComponent(
+    product: ProductModel,
+    uiState: HomeUIState,
+    onEvent: (HomeScreenEvent) -> Unit
+) {
 
-    fun showModal() {
-        openDialog.value = true
-    }
+    HomeProductContent(
+        productModel = product,
+        uiState = uiState,
+        onEvent = onEvent
+    )
 
-    fun closeModal() {
-        openDialog.value = false
-    }
+}
 
-    if (openDialog.value) {
-        Dialog(
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false,
-                decorFitsSystemWindows = false
-            ),
-            onDismissRequest = { closeModal() }
-        ) {
-            ProductDetailsDialogComponent(productModel = productModel)
-        }
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeProductContent(
+    productModel: ProductModel,
+    uiState: HomeUIState,
+    onEvent: (HomeScreenEvent) -> Unit
+) {
 
     Card(
         colors = CardDefaults.cardColors(
@@ -133,7 +134,7 @@ fun HomeProductComponent(productModel: ProductModel) {
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
-                                showModal()
+                                onEvent(HomeScreenEvent.ShowDialogWithProduct(productModel))
                             }
                     ) {
                         Image(
@@ -166,7 +167,11 @@ private fun ProductComponentPreview() {
         customizationGroupModels = emptyList()
     )
 
-    HomeProductComponent(productModel = mockProductModel)
+    HomeProductComponent(
+        product = mockProductModel,
+        uiState = HomeUIState(),
+        onEvent = {}
+    )
 }
 
 @Preview

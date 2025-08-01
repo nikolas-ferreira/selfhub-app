@@ -15,6 +15,7 @@ import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
 import digital.studioweb.selfhub_app.domain.features.models.PaymentMethod
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
+import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsEvent
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatCurrentTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -39,7 +40,7 @@ class HomeViewModel @Inject constructor(
 
     fun init() {
         getCategories()
-        startClock()
+//        startClock()
     }
 
     fun onEvent(event: HomeScreenEvent) {
@@ -51,6 +52,15 @@ class HomeViewModel @Inject constructor(
             is HomeScreenEvent.AddToCart -> handleAddToCart(event.item)
             is HomeScreenEvent.RemoveItemFromCart -> handleRemoveItemFromCart(event.item)
             is HomeScreenEvent.OnRefreshRequested -> init()
+            is HomeScreenEvent.ShowDialogWithProduct -> {
+                uiState = uiState.copy(
+                        selectedProduct = event.product,
+                        showDialog = true
+                    )
+                }
+            is HomeScreenEvent.CloseDialog -> {
+                uiState = uiState.copy(showDialog = false, selectedProduct = null)
+            }
         }
     }
 

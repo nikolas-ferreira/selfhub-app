@@ -5,6 +5,7 @@ import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
 
 data class HomeUIState(
+    val showDialog: Boolean = false,
     val isLoading: Boolean = true,
     val hasError: Boolean = false,
     val isSuccess: Boolean = false,
@@ -17,5 +18,6 @@ data class HomeUIState(
     val selectedSidebarIndex: Int = 0,
     val searchText: String = "",
     val currentTime: String = "",
-    val snackBarMessage: String? = null
+    val snackBarMessage: String? = null,
+    val selectedProduct: ProductModel? = null
 )

@@ -11,7 +11,7 @@ data class ProductDetailsUIState(
     val productQuantity: Int = 1,
     val observation: String = "",
     val finalPrice: Double = 0.0,
-    val selectedCustomizations: List<CustomizationOptionModel> = emptyList(),
+    val selectedCustomizations: List<CustomizationOptionModel> = emptyList()
 ) {
     companion object {
         fun initial(productModel: ProductModel): ProductDetailsUIState {

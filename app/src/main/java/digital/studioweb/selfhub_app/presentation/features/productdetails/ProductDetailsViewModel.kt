@@ -42,7 +42,6 @@ class ProductDetailsViewModel @Inject constructor(
                 event.group,
                 event.optionId
             )
-            else -> {}
         }
     }
 

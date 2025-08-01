@@ -10,6 +10,5 @@ sealed class ProductDetailsEvent {
     data class ChangeObservation(val observation: String) : ProductDetailsEvent()
     data class IncrementOption(val group: CustomizationGroupModel, val optionId: String) : ProductDetailsEvent()
     data class DecrementOption(val group: CustomizationGroupModel, val optionId: String) : ProductDetailsEvent()
-    object CloseDialog : ProductDetailsEvent()
 
 }
