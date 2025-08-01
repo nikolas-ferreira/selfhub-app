@@ -3,6 +3,7 @@ package digital.studioweb.selfhub_app.presentation.utils
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -19,7 +20,8 @@ object StringUtils {
     }
 
     fun formatCurrentTime(): String {
-        val now = LocalTime.now()
+        val zoneId = ZoneId.of("America/Sao_Paulo")
+        val now = LocalTime.now(zoneId)
         val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
         return now.format(timeFormatter)
     }

@@ -3,14 +3,45 @@ package digital.studioweb.selfhub_app.presentation.features.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
@@ -21,17 +52,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import digital.studioweb.selfhub_app.R
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationOptionModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
-import digital.studioweb.selfhub_app.domain.features.models.PaymentMethod
-import digital.studioweb.selfhub_app.presentation.features.home.components.HomeOpenCartButton
 import digital.studioweb.selfhub_app.presentation.features.cart.CartComponent
-import digital.studioweb.selfhub_app.presentation.features.home.components.*
-import digital.studioweb.selfhub_app.presentation.features.home.models.*
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeCategoryItemComponent
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeCategoryShimmerComponent
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeDualDrawerLayout
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeEditTextComponent
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeOpenCartButton
 import digital.studioweb.selfhub_app.presentation.features.home.components.HomeProductComponent
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeProductShimmerComponent
+import digital.studioweb.selfhub_app.presentation.features.home.components.HomeSideBarComponent
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen() {
@@ -79,14 +113,52 @@ private fun HomeScreenContent(
 
 @Composable
 private fun HomeLoadingContent() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(White),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Loading...")
+    val shimmerProducts = List(8) {
+        ProductModel(
+            id = "$it",
+            name = "",
+            price = 0.0,
+            imageUrl = "",
+            description = "",
+            createdAt = "",
+            updatedAt = "",
+            categoryId = "",
+            createdById = "",
+            lastEditedById = "",
+            customizationGroupModels = emptyList()
+        )
     }
+
+    val shimmerCategories = List(5) {
+        CategoryModel(
+            id = "$it",
+            name = "",
+            iconUrl = "",
+            createdAt = "",
+            updatedAt = "",
+            restaurantId = "",
+            lastEditedById = ""
+        )
+    }
+
+    val uiState = HomeUIState(
+        categories = shimmerCategories,
+        productModels = shimmerProducts,
+        displayedProducts = shimmerProducts,
+        selectedCategoryIndex = -1,
+        selectedSidebarIndex = 0,
+        searchText = "",
+        currentTime = "",
+        isLoading = true,
+        isSuccess = false,
+        hasError = false
+    )
+
+    HomeSuccessContent(
+        uiState = uiState,
+        onEvent = {},
+        onCartClick = {}
+    )
 }
 
 @Composable
@@ -101,112 +173,190 @@ private fun HomeErrorContent() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeSuccessContent(
     uiState: HomeUIState,
     onEvent: (HomeScreenEvent) -> Unit,
     onCartClick: () -> Unit
 ) {
-    val scrollState = rememberScrollState()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Row(
+    LaunchedEffect(uiState.snackBarMessage) {
+        uiState.snackBarMessage?.let { message ->
+            coroutineScope.launch {
+                snackBarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.app_background))
     ) {
-        HomeSideBarComponent(
-            selectedIndex = uiState.selectedSidebarIndex,
-            onItemSelected = { index ->
-                onEvent(HomeScreenEvent.OnSidebarItemSelected(index))
-            }
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(start = 36.dp, top = 24.dp, end = 24.dp)
+        Row(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column {
-                    Text("SelfHub Restaurant", color = White, fontSize = 22.sp)
-                    Row(
-                        Modifier.padding(top = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_clock),
-                            colorFilter = ColorFilter.tint(
-                                colorResource(id = R.color.primary_orange)
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(uiState.currentTime.take(10), color = White, fontSize = 14.sp)
-                    }
+            HomeSideBarComponent(
+                selectedIndex = uiState.selectedSidebarIndex,
+                onItemSelected = { index ->
+                    onEvent(HomeScreenEvent.OnSidebarItemSelected(index))
                 }
-                HomeOpenCartButton(onClick = onCartClick)
-            }
-
-            Spacer(Modifier.size(38.dp))
-
-            HomeEditTextComponent(
-                value = uiState.searchText,
-                onValueChange = {
-                    onEvent(HomeScreenEvent.OnSearchTextChanged(it))
-                },
-                placeholder = stringResource(R.string.home_search_edit_text_placeholder)
             )
 
-            Spacer(Modifier.size(24.dp))
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-                    .horizontalScroll(scrollState)
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .padding(start = 36.dp, top = 24.dp, end = 24.dp)
             ) {
-                HomeCategoryItemComponent(
-                    isSelected = uiState.selectedCategoryIndex == -1,
-                    menuCategoryName = stringResource(R.string.home_category_list_all_items),
-                    menuCategoryIcon = R.drawable.hamburguer,
-                    onClick = {
-                        onEvent(HomeScreenEvent.OnCategorySelected(-1))
-                    }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-
-                uiState.categories.forEachIndexed { index, category ->
-                    HomeCategoryItemComponent(
-                        isSelected = uiState.selectedCategoryIndex == index,
-                        menuCategoryName = category.name,
-                        menuCategoryIcon = R.drawable.hamburguer,
-                        onClick = {
-                            onEvent(HomeScreenEvent.OnCategorySelected(index))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column {
+                        Text("SelfHub Restaurant", color = White, fontSize = 22.sp)
+                        Row(
+                            Modifier.padding(top = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_clock),
+                                colorFilter = ColorFilter.tint(
+                                    colorResource(id = R.color.primary_orange)
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(uiState.currentTime.take(10), color = White, fontSize = 14.sp)
                         }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    HomeOpenCartButton(onClick = onCartClick)
                 }
-            }
+                Spacer(modifier = Modifier.height(24.dp))
+                HomeEditTextComponent(
+                    value = uiState.searchText,
+                    onValueChange = {
+                        onEvent(HomeScreenEvent.OnSearchTextChanged(it))
+                    },
+                    placeholder = stringResource(R.string.home_search_edit_text_placeholder)
+                )
 
-            Spacer(modifier = Modifier.height(60.dp))
+                val state = rememberPullToRefreshState()
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
-                contentPadding = PaddingValues(bottom = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(26.dp),
-                horizontalArrangement = Arrangement.spacedBy(42.dp)
-            ) {
-                items(uiState.displayedProducts.size) { index ->
-                    HomeProductComponent(productModel = uiState.displayedProducts[index])
+                PullToRefreshBox(
+                    isRefreshing = uiState.isLoading,
+                    onRefresh = { onEvent(HomeScreenEvent.OnRefreshRequested) },
+                    state = state,
+                    indicator = {
+                        Indicator(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            containerColor = colorResource(R.color.product_component_card_background),
+                            color = colorResource(R.color.primary_orange),
+                            state = state,
+                            isRefreshing = uiState.isLoading
+                        )
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState())
+                        ) {
+                            if (uiState.isLoading) {
+                                repeat(6) {
+                                    HomeCategoryShimmerComponent()
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                }
+                            } else {
+                                HomeCategoryItemComponent(
+                                    isSelected = uiState.selectedCategoryIndex == -1,
+                                    menuCategoryName = stringResource(R.string.home_category_list_all_items),
+                                    menuCategoryIcon = R.drawable.hamburguer,
+                                    onClick = {
+                                        onEvent(HomeScreenEvent.OnCategorySelected(-1))
+                                    }
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                uiState.categories.forEachIndexed { index, category ->
+                                    HomeCategoryItemComponent(
+                                        isSelected = uiState.selectedCategoryIndex == index,
+                                        menuCategoryName = category.name,
+                                        menuCategoryIcon = R.drawable.hamburguer,
+                                        onClick = {
+                                            onEvent(HomeScreenEvent.OnCategorySelected(index))
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(36.dp))
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(4),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 0.dp, max = 1200.dp),
+                            verticalArrangement = Arrangement.spacedBy(26.dp),
+                            horizontalArrangement = Arrangement.spacedBy(42.dp),
+                            contentPadding = PaddingValues(bottom = 24.dp)
+                        ) {
+                            items(uiState.displayedProducts.size) { index ->
+                                if (uiState.isLoading) {
+                                    HomeProductShimmerComponent()
+                                } else {
+                                    HomeProductComponent(productModel = uiState.displayedProducts[index])
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        SnackbarHost(
+            hostState = snackBarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            snackbar = { data ->
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(color = colorResource(id = R.color.success_green))
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Sucesso",
+                        tint = White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = data.visuals.message,
+                        color = White,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        )
     }
 }
+
 
 @Preview(
     showBackground = true,

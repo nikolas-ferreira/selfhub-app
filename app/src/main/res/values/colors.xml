@@ -35,6 +35,9 @@
     <!--    Colors for Button components-->
     <color name="home_online_button">#228672</color>
 
+    <!--    Success -->
+    <color name="success_green">#2E7D32</color>
+
     <!--    Rounded Button-->
     <color name="rounded_button_backgroud">#F2EFDB</color>
 

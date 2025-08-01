@@ -28,11 +28,11 @@ data class OrderDTO(
     fun mapTo(): CartOrderModel {
         return CartOrderModel(
             orderNumber = orderNumber ?: "",
-            tableNumber = tableNumber ?: 0,
+//            tableNumber = tableNumber ?: 0,
             paymentMethod = paymentMethod ?: PaymentMethod.PIX,
             totalValue = totalValue ?: 0.0,
-            restaurantId = restaurantId ?: "",
-            items = emptyList()//items?.map { it.mapTo() } ?: emptyList()
+            //          restaurantId = restaurantId ?: "",
+            //        items = items?.map { it.mapTo() } ?: emptyList()
         )
     }
 }

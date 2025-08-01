@@ -7,6 +7,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.compose.compiler)
 }
 
 
@@ -18,12 +19,12 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace = "digital.studioweb.selfhub_app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "digital.studioweb.selfhub_app"
-        minSdk = 28
-        targetSdk = 34
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -70,13 +71,13 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11" // compatível com Kotlin 2.0
     }
 }
 
@@ -121,4 +122,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    implementation(libs.compose.shimmer)
+
 }

@@ -1,11 +1,13 @@
 package digital.studioweb.selfhub_app.presentation.features.productdetails
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,25 +21,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationGroupModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationOptionModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
+import digital.studioweb.selfhub_app.presentation.features.home.HomeViewModel
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductCount
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.AddItemCheckComponent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductDetailsObservationInputComponent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsEvent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsUIState
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatToBRLCurrency
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
 fun ProductDetailsDialogComponent(
-    productModel: ProductModel,
-    onAddToCart: (CartOrderItemModel) -> Unit = {}
+    productModel: ProductModel
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+
     val uiState = viewModel.uiState
 
     LaunchedEffect(Unit) {
@@ -47,7 +55,7 @@ fun ProductDetailsDialogComponent(
     ProductDetailsDialogContent(
         uiState = uiState,
         onEvent = viewModel::onEvent,
-        onAddToCart = onAddToCart
+        homeViewModel = homeViewModel
     )
 }
 
@@ -55,16 +63,17 @@ fun ProductDetailsDialogComponent(
 private fun ProductDetailsDialogContent(
     uiState: ProductDetailsUIState,
     onEvent: (ProductDetailsEvent) -> Unit,
-    onAddToCart: (CartOrderItemModel) -> Unit
+    homeViewModel: HomeViewModel? = null
 ) {
     val product = uiState.productModel ?: return
 
     Column(
         modifier = Modifier
-            .width(600.dp)
             .fillMaxHeight()
             .padding(16.dp)
-            .background(colorResource(R.color.app_background), RoundedCornerShape(16.dp))
+            .width(600.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(colorResource(R.color.app_background))
     ) {
         LazyColumn {
             /**
@@ -191,14 +200,13 @@ private fun ProductDetailsDialogContent(
                     color = colorResource(R.color.divider_color), thickness = 0.5.dp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Button(
                     onClick = {
                         if (uiState.isAllValid) {
-                            val product = uiState.productModel ?: return@Button
-
+                            val product = uiState.productModel
                             val cartOrderItemModel = CartOrderItemModel(
-                                id = product.id,
+                                orderItemId = UUID.randomUUID().toString(),
+                                productId = product.id,
                                 name = product.name,
                                 price = product.price,
                                 imageUrl = product.imageUrl,
@@ -206,8 +214,8 @@ private fun ProductDetailsDialogContent(
                                 customizationOptions = uiState.selectedCustomizations,
                                 quantity = uiState.productQuantity
                             )
-
-                            onEvent(ProductDetailsEvent.AddToCart(cartOrderItemModel))
+                            homeViewModel!!.onEvent(HomeScreenEvent.AddToCart(cartOrderItemModel))
+                            onEvent(ProductDetailsEvent.CloseDialog)
                         }
                     },
                     modifier = Modifier
@@ -232,6 +240,7 @@ private fun ProductDetailsDialogContent(
             }
         }
     }
+
 }
 
 @Preview(showBackground = true)
@@ -288,7 +297,6 @@ private fun ProductDetailsDialogComponentPreview() {
 
     ProductDetailsDialogContent(
         uiState = previewState.value,
-        onEvent = {},
-        onAddToCart = {}
+        onEvent = {}
     )
 }

@@ -78,7 +78,6 @@ fun HomeEditTextComponent(
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Sentences,
-                    autoCorrect = true,
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),

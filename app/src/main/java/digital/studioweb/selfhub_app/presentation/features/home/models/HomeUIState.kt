@@ -1,5 +1,6 @@
 package digital.studioweb.selfhub_app.presentation.features.home.models
 
+import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
 
@@ -11,9 +12,10 @@ data class HomeUIState(
     val productModels: List<ProductModel> = emptyList(),
     val displayedProducts: List<ProductModel> = emptyList(),
     val cartProductModels: List<ProductModel> = emptyList(),
-
+    val order: CartOrderModel = CartOrderModel(),
     val selectedCategoryIndex: Int = -1,
     val selectedSidebarIndex: Int = 0,
     val searchText: String = "",
-    val currentTime: String = ""
+    val currentTime: String = "",
+    val snackBarMessage: String? = null
 )

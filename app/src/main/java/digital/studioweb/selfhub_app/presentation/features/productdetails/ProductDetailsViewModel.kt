@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationGroupModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationOptionModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
@@ -44,33 +42,13 @@ class ProductDetailsViewModel @Inject constructor(
                 event.group,
                 event.optionId
             )
-            is ProductDetailsEvent.AddToCart -> handleAddToCart(event.item)
-
+            else -> {}
         }
     }
 
     // endregion
 
     //region Visible for testing
-
-    @VisibleForTesting
-    fun handleAddToCart(item: CartOrderItemModel) {
-        val hasActiveOrder = uiState.order.orderNumber.isNotBlank()
-        val currentOrder = if (hasActiveOrder) {
-            uiState.order.copy(items = uiState.order.items + item)
-        } else {
-            CartOrderModel(
-                orderNumber = (1000..9999).random().toString(),
-                tableNumber = 10,
-                paymentMethod = digital.studioweb.selfhub_app.domain.features.models.PaymentMethod.UNKNOWN,
-                totalValue = 0.0,
-                restaurantId = "123abc",
-                items = listOf(item)
-            )
-        }
-
-        uiState = uiState.copy(order = currentOrder)
-    }
 
     @VisibleForTesting
     fun updateSelectedCustomizations() {

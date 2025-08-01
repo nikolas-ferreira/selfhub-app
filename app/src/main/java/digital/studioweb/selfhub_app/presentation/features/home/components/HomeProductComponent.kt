@@ -2,6 +2,7 @@ package digital.studioweb.selfhub_app.presentation.features.home.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
 import digital.studioweb.selfhub_app.presentation.features.productdetails.ProductDetailsDialogComponent
@@ -63,10 +67,7 @@ fun HomeProductComponent(productModel: ProductModel) {
             ),
             onDismissRequest = { closeModal() }
         ) {
-            ProductDetailsDialogComponent(productModel = productModel, onAddToCart = { item ->
-                val a = item
-                Log.e("ITEM DO PEDIDO:::", a.toString())
-            })
+            ProductDetailsDialogComponent(productModel = productModel)
         }
     }
 
@@ -166,4 +167,76 @@ private fun ProductComponentPreview() {
     )
 
     HomeProductComponent(productModel = mockProductModel)
+}
+
+@Preview
+@Composable
+fun HomeProductShimmerComponent() {
+    val shimmerInstance = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Column(
+        modifier = Modifier
+            .width(220.dp)
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(12.dp))
+            .background(colorResource(R.color.product_component_card_background))
+            .padding(8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .shimmer(shimmerInstance)
+                .background(Color.Gray)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .height(20.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .shimmer(shimmerInstance)
+                .background(Color.Gray)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .shimmer(shimmerInstance)
+                .background(Color.Gray)
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .height(12.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .shimmer(shimmerInstance)
+                .background(Color.Gray)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(16.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .shimmer(shimmerInstance)
+                    .background(Color.Gray)
+            )
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(RoundedCornerShape(50))
+                    .shimmer(shimmerInstance)
+                    .background(Color.Gray)
+            )
+        }
+    }
 }

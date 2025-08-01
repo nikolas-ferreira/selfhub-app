@@ -10,6 +10,9 @@ import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCa
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetProductsUseCase
 import digital.studioweb.selfhub_app.data.base.onFailure
 import digital.studioweb.selfhub_app.data.base.onSuccess
+import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
+import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
+import digital.studioweb.selfhub_app.domain.features.models.PaymentMethod
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatCurrentTime
@@ -45,12 +48,29 @@ class HomeViewModel @Inject constructor(
             is HomeScreenEvent.OnSearchTextChanged -> handleSearchTextChange(event.text)
             is HomeScreenEvent.OnSidebarItemSelected -> handleSidebarItemSelected(event.index)
             is HomeScreenEvent.OnCartClick -> handleCartClick()
+            is HomeScreenEvent.AddToCart -> handleAddToCart(event.item)
+            is HomeScreenEvent.RemoveItemFromCart -> handleRemoveItemFromCart(event.item)
+            is HomeScreenEvent.OnRefreshRequested -> init()
         }
     }
 
     //endregion
 
     //region Visible for Testing
+
+    @VisibleForTesting
+    fun handleRemoveItemFromCart(item: CartOrderItemModel) {
+        val newItems = uiState.order.items.filter { it.orderItemId != item.orderItemId }
+
+        val updatedTotalValue = newItems.sumOf { it.price * it.quantity }
+
+        uiState = uiState.copy(
+            order = uiState.order.copy(
+                items = newItems,
+                totalValue = updatedTotalValue
+            )
+        )
+    }
 
     @VisibleForTesting
     fun handleCategorySelection(index: Int) {
@@ -74,14 +94,18 @@ class HomeViewModel @Inject constructor(
     }
 
     @VisibleForTesting
-    private fun handleCartClick() { }
+    private fun handleCartClick() {
+    }
 
     @VisibleForTesting
     fun updateDisplayedProducts() {
         val categoryId = uiState.categories.getOrNull(uiState.selectedCategoryIndex)?.id
         val filtered = uiState.productModels.filter {
             val matchCategory = categoryId == null || it.categoryId == categoryId
-            val matchSearch = uiState.searchText.isBlank() || it.name.contains(uiState.searchText, ignoreCase = true)
+            val matchSearch = uiState.searchText.isBlank() || it.name.contains(
+                uiState.searchText,
+                ignoreCase = true
+            )
             matchCategory && matchSearch
         }
         uiState = uiState.copy(displayedProducts = filtered)
@@ -143,6 +167,38 @@ class HomeViewModel @Inject constructor(
         uiState = uiState.copy(
             isLoading = true,
             hasError = false
+        )
+    }
+
+    @VisibleForTesting
+    fun handleAddToCart(item: CartOrderItemModel) {
+        val hasActiveOrder = uiState.order.orderNumber.isNotBlank()
+
+        val updatedItems = if (hasActiveOrder) {
+            uiState.order.items + item
+        } else {
+            listOf(item)
+        }
+
+        val updatedTotalValue = updatedItems.sumOf { it.price * it.quantity }
+
+        val currentOrder = if (hasActiveOrder) {
+            uiState.order.copy(
+                items = updatedItems,
+                totalValue = updatedTotalValue
+            )
+        } else {
+            CartOrderModel(
+                orderNumber = (0..9999).random().toString(),
+                paymentMethod = PaymentMethod.UNKNOWN,
+                totalValue = updatedTotalValue,
+                items = updatedItems
+            )
+        }
+
+        uiState = uiState.copy(
+            order = currentOrder,
+            snackBarMessage = "Produto adicionado ao carrinho!"
         )
     }
 

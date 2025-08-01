@@ -1,6 +1,7 @@
 package digital.studioweb.selfhub_app.presentation.features.cart.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,10 +36,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
 import digital.studioweb.selfhub_app.domain.features.home.models.CustomizationOptionModel
+import digital.studioweb.selfhub_app.presentation.features.home.HomeViewModel
+import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
 import digital.studioweb.selfhub_app.presentation.features.productdetails.components.ProductCount
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatToBRLCurrency
 
@@ -47,18 +51,25 @@ fun CartItemComponent(
     item: CartOrderItemModel,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: HomeViewModel = hiltViewModel()
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = colorResource(R.color.app_background)),
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(R.color.app_background)
+        ),
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)) {
+                .padding(12.dp)
+        ) {
             AsyncImage(
                 model = item.imageUrl,
                 contentDescription = item.name,
@@ -89,8 +100,12 @@ fun CartItemComponent(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = item.ratingStar.toString(),
-                        tint = Color(0xFFFFB800),
-                        modifier = Modifier.size(14.dp)
+                        tint = colorResource(R.color.side_bar_icon_selected_color),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable(onClick = {
+                                viewModel.onEvent(HomeScreenEvent.RemoveItemFromCart(item))
+                            })
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -101,7 +116,7 @@ fun CartItemComponent(
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = item.ratingStar.toString(),
-                        tint = Color(0xFFFFB800),
+                        tint = colorResource(R.color.side_bar_icon_selected_color),
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(2.dp))
@@ -132,7 +147,7 @@ fun CartItemComponent(
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
-                if(item.observation.isNotBlank()){
+                if (item.observation.isNotBlank()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row {
                         Image(

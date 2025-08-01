@@ -42,11 +42,12 @@ import digital.studioweb.selfhub_app.presentation.features.cart.components.CartD
 import digital.studioweb.selfhub_app.presentation.features.cart.components.CartItemComponent
 import digital.studioweb.selfhub_app.presentation.features.home.HomeViewModel
 import digital.studioweb.selfhub_app.presentation.features.productdetails.ProductDetailsViewModel
+import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatToBRLCurrency
 
 @Composable
 fun CartComponent(
 ) {
-    val viewModel: ProductDetailsViewModel = hiltViewModel()
+    val viewModel: HomeViewModel = hiltViewModel()
     val order = viewModel.uiState.order
 
     Column(
@@ -135,6 +136,7 @@ fun CartComponent(
                         style = TextStyle(fontFamily = FontFamily.Serif)
                     )
                 }
+                Spacer(Modifier.height(48.dp))
                 CartDashedDivider()
             } else {
                 Spacer(Modifier.height(8.dp))
@@ -177,7 +179,7 @@ fun CartComponent(
             }
             Spacer(Modifier.height(12.dp))
             CartDashedDivider()
-            Spacer(Modifier.height(26.dp))
+            Spacer(Modifier.height(12.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
@@ -192,17 +194,16 @@ fun CartComponent(
                 )
                 Text(
                     color = colorResource(R.color.white),
-                    text = "R$ 0,00",
+                    text = formatToBRLCurrency(order.totalValue),
                     fontSize = 22.sp,
                     style = TextStyle(fontFamily = FontFamily.Serif)
                 )
             }
-            Spacer(Modifier.height(26.dp))
+            Spacer(Modifier.height(12.dp))
             Box(
                 Modifier
                     .fillMaxWidth()
                     .background(
-                        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                         color = colorResource(R.color.primary_orange)
                     )
             ) {
@@ -228,5 +229,5 @@ fun CartComponent(
 @Preview
 @Composable
 private fun CartComponentPreview() {
-
+    CartComponent()
 }

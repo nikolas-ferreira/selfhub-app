@@ -1,7 +1,8 @@
 package digital.studioweb.selfhub_app.domain.features.home.models
 
 data class CartOrderItemModel(
-    val id: String = "",
+    val orderItemId: String = "",
+    val productId: String = "",
     val name: String = "",
     val price: Double = 0.0,
     val imageUrl: String = "",
