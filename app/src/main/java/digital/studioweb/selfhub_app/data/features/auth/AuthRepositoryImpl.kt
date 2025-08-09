@@ -9,11 +9,6 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authAPI: AuthAPI
 ) : AuthRepository {
-    override suspend fun login(): Login =
-        authAPI.login(
-            LoginRequestModel(
-                email = "admin@admin",
-                password = "12qwaszx"
-            )
-        ).response.mapTo()
+    override suspend fun login(loginRequestModel: LoginRequestModel): Login =
+        authAPI.login(loginRequestModel).response.mapTo()
 }

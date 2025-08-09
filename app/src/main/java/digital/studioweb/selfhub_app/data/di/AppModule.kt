@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import digital.studioweb.selfhub_app.data.features.auth.AuthAPI
 import digital.studioweb.selfhub_app.data.features.auth.AuthRepositoryImpl
 import digital.studioweb.selfhub_app.data.features.home.HomeRepositoryImpl
+import digital.studioweb.selfhub_app.BuildConfig
 import digital.studioweb.selfhub_app.data.features.home.HomeAPI
 import digital.studioweb.selfhub_app.domain.features.auth.AuthRepository
 import digital.studioweb.selfhub_app.domain.features.auth.LoginUseCase
@@ -32,7 +33,11 @@ object AppModule {
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
     }
 
