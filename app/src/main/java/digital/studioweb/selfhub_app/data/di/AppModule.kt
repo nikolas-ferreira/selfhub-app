@@ -12,6 +12,7 @@ import digital.studioweb.selfhub_app.domain.features.auth.AuthRepository
 import digital.studioweb.selfhub_app.domain.features.auth.LoginUseCase
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCase
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetProductsUseCase
+import digital.studioweb.selfhub_app.domain.features.home.HomeCreateOrderUseCase
 import digital.studioweb.selfhub_app.domain.features.home.HomeRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -102,6 +103,12 @@ object AppModule {
     @Singleton
     fun provideHomeGetProductsUseCase(homeRepository: HomeRepository): HomeGetProductsUseCase {
         return HomeGetProductsUseCase(homeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeCreateOrderUseCase(homeRepository: HomeRepository): HomeCreateOrderUseCase {
+        return HomeCreateOrderUseCase(homeRepository)
     }
 
     //endregion

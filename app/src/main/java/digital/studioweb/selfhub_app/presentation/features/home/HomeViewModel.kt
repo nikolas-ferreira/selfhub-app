@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCase
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetProductsUseCase
+import digital.studioweb.selfhub_app.domain.features.home.HomeCreateOrderUseCase
 import digital.studioweb.selfhub_app.data.base.onFailure
 import digital.studioweb.selfhub_app.data.base.onSuccess
 import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: HomeGetCategoriesUseCase,
-    private val getProductsUseCase: HomeGetProductsUseCase
+    private val getProductsUseCase: HomeGetProductsUseCase,
+    private val createOrderUseCase: HomeCreateOrderUseCase
 ) : ViewModel() {
 
     //region Properties
@@ -52,6 +54,7 @@ class HomeViewModel @Inject constructor(
             is HomeScreenEvent.AddToCart -> handleAddToCart(event.item)
             is HomeScreenEvent.RemoveItemFromCart -> handleRemoveItemFromCart(event.item)
             is HomeScreenEvent.OnRefreshRequested -> init()
+            is HomeScreenEvent.OnConfirmOrder -> handleConfirmOrder()
             is HomeScreenEvent.ShowDialogWithProduct -> {
                 uiState = uiState.copy(
                         selectedProduct = event.product,
@@ -210,6 +213,24 @@ class HomeViewModel @Inject constructor(
             order = currentOrder,
             snackBarMessage = "Produto adicionado ao carrinho!"
         )
+    }
+
+    @VisibleForTesting
+    fun handleConfirmOrder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            createOrderUseCase.runAsync(uiState.order)
+                .onSuccess {
+                    uiState = uiState.copy(
+                        order = CartOrderModel(),
+                        snackBarMessage = "Pedido enviado com sucesso!"
+                    )
+                }
+                .onFailure {
+                    uiState = uiState.copy(
+                        snackBarMessage = "Erro ao enviar pedido"
+                    )
+                }
+        }
     }
 
     //endregion

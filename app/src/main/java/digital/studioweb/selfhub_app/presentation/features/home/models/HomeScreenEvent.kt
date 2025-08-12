@@ -13,4 +13,5 @@ sealed class HomeScreenEvent {
     data class AddToCart(val item: CartOrderItemModel) : HomeScreenEvent()
     data class RemoveItemFromCart(val item: CartOrderItemModel) : HomeScreenEvent()
     object OnRefreshRequested : HomeScreenEvent()
+    object OnConfirmOrder : HomeScreenEvent()
 }
