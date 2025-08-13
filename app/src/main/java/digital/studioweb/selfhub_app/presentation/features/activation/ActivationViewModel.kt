@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import digital.studioweb.selfhub_app.domain.features.auth.AssociateDeviceUseCase
 import digital.studioweb.selfhub_app.domain.features.auth.GetRestaurantByCNPJUseCase
 import digital.studioweb.selfhub_app.domain.features.auth.SaveCNPJUseCase
+import digital.studioweb.selfhub_app.domain.features.auth.SaveRestaurantIdUseCase
 import digital.studioweb.selfhub_app.presentation.features.activation.models.ActivationEvents
 import digital.studioweb.selfhub_app.presentation.features.activation.models.ActivationUIState
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class ActivationViewModel @Inject constructor(
     private val getRestaurantByCNPJUseCase: GetRestaurantByCNPJUseCase,
     private val associateDeviceUseCase: AssociateDeviceUseCase,
-    private val saveCNPJUseCase: SaveCNPJUseCase
+    private val saveCNPJUseCase: SaveCNPJUseCase,
+    private val saveRestaurantIdUseCase: SaveRestaurantIdUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf(ActivationUIState())
@@ -86,11 +88,15 @@ class ActivationViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             associateDeviceUseCase.runAsync(params)
-                .onSuccess {
-                    val params = SaveCNPJUseCase.Params(
+                .onSuccess { response ->
+                    val cnpjParams = SaveCNPJUseCase.Params(
                         cnpj = uiState.cnpj
                     )
-                    saveCNPJUseCase.runSync(params)
+                    saveCNPJUseCase.runSync(cnpjParams)
+                    val restaurantParams = SaveRestaurantIdUseCase.Params(
+                        restaurantId = response.restaurant.id
+                    )
+                    saveRestaurantIdUseCase.runSync(restaurantParams)
                     goToHome()
                 }
                 .onFailure {}

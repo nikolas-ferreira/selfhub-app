@@ -12,5 +12,6 @@ object LocalConstants {
      * Shared Preferences Keys
      */
     const val CNPJ_KEY = "CNPJKey"
+    const val RESTAURANT_ID_KEY = "RestaurantIdKey"
 
 }

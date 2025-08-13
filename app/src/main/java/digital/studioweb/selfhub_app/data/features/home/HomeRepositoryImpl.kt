@@ -1,7 +1,7 @@
 package digital.studioweb.selfhub_app.data.features.home
 
 import digital.studioweb.selfhub_app.data.sources.SecureSharedLocalDataSourceInterface
-import digital.studioweb.selfhub_app.data.utils.LocalConstants.CNPJ_KEY
+import digital.studioweb.selfhub_app.data.utils.LocalConstants.RESTAURANT_ID_KEY
 import digital.studioweb.selfhub_app.domain.features.home.HomeRepository
 import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
@@ -13,13 +13,13 @@ class HomeRepositoryImpl @Inject constructor(
 ) : HomeRepository {
     override suspend fun getCategories(): List<CategoryModel> {
         return homeAPI.getCategories(
-            restaurantId = secureSharedLocalDataSource.retrieve(CNPJ_KEY, String::class) ?: ""
+            restaurantId = secureSharedLocalDataSource.retrieve(RESTAURANT_ID_KEY, String::class) ?: ""
         ).response.map { it.mapTo() }
     }
 
     override suspend fun getAllProducts(): List<ProductModel> {
         return homeAPI.getProducts(
-            restaurantId = secureSharedLocalDataSource.retrieve(CNPJ_KEY, String::class) ?: ""
+            restaurantId = secureSharedLocalDataSource.retrieve(RESTAURANT_ID_KEY, String::class) ?: ""
         ).response.map { it.mapTo() }
     }
 }
