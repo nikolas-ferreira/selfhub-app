@@ -24,9 +24,9 @@
     <color name="white_alabaster">#FCFCFC</color>
 
     <!--    Edit Text-->
-    <color name="edit_text_background">#2D303E</color>"
-    <color name="edit_text_border">#393C49</color>"
-    <color name="edit_text_text">#ABBBC2</color>"
+    <color name="edit_text_background">#2D303E</color>
+    <color name="edit_text_border">#393C49</color>
+    <color name="edit_text_text">#ABBBC2</color>
 
     <!--    Colors for Text components-->
     <color name="purple_700">#FF3700B3</color>
@@ -37,6 +37,9 @@
 
     <!--    Success -->
     <color name="success_green">#2E7D32</color>
+
+    <!--    Error -->
+    <color name="error_wine">#8B1A1A</color>
 
     <!--    Rounded Button-->
     <color name="rounded_button_backgroud">#F2EFDB</color>
