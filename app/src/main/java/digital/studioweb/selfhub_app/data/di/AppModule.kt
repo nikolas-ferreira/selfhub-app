@@ -25,6 +25,7 @@ import digital.studioweb.selfhub_app.domain.features.auth.AuthRepository
 import digital.studioweb.selfhub_app.domain.features.auth.GetCNPJUseCase
 import digital.studioweb.selfhub_app.domain.features.auth.GetRestaurantByCNPJUseCase
 import digital.studioweb.selfhub_app.domain.features.auth.SaveCNPJUseCase
+import digital.studioweb.selfhub_app.domain.features.auth.SaveRestaurantIdUseCase
 import digital.studioweb.selfhub_app.domain.features.cart.CartCreateOrderUseCase
 import digital.studioweb.selfhub_app.domain.features.cart.CartRepository
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCase
@@ -121,6 +122,12 @@ object AppModule {
     @Singleton
     fun provideSaveCNPJUseCase(authRepository: AuthRepository): SaveCNPJUseCase {
         return SaveCNPJUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSaveRestaurantIdUseCase(authRepository: AuthRepository): SaveRestaurantIdUseCase {
+        return SaveRestaurantIdUseCase(authRepository)
     }
 
     @Provides
