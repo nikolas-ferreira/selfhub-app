@@ -7,22 +7,23 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CustomizationOptionDTO(
     @SerialName("id")
-    val id: String,
+    val id: String?,
 
     @SerialName("name")
-    val name: String,
+    val name: String?,
 
     @SerialName("additionalPrice")
-    val price: Double,
+    val additionalPrice: Double?,
 
     @SerialName("quantity")
     val quantity: Int = 0
 ) {
     fun mapTo(): CustomizationOptionModel {
         return CustomizationOptionModel(
-            id = id,
-            name = name,
-            additionalPrice = price
+            id = id ?: "",
+            name = name ?: "",
+            additionalPrice = additionalPrice ?: 0.0,
+            quantity = quantity
         )
     }
 }

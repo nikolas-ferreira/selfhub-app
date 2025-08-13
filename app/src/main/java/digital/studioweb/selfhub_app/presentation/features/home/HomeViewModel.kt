@@ -1,5 +1,6 @@
 package digital.studioweb.selfhub_app.presentation.features.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,12 +11,12 @@ import digital.studioweb.selfhub_app.domain.features.home.HomeGetCategoriesUseCa
 import digital.studioweb.selfhub_app.domain.features.home.HomeGetProductsUseCase
 import digital.studioweb.selfhub_app.data.base.onFailure
 import digital.studioweb.selfhub_app.data.base.onSuccess
+import digital.studioweb.selfhub_app.domain.features.cart.CartCreateOrderUseCase
 import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemModel
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
+import digital.studioweb.selfhub_app.domain.features.home.models.CartCreateOrderModel
 import digital.studioweb.selfhub_app.domain.features.models.PaymentMethod
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeUIState
 import digital.studioweb.selfhub_app.presentation.features.home.models.HomeScreenEvent
-import digital.studioweb.selfhub_app.presentation.features.productdetails.models.ProductDetailsEvent
 import digital.studioweb.selfhub_app.presentation.utils.StringUtils.formatCurrentTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: HomeGetCategoriesUseCase,
-    private val getProductsUseCase: HomeGetProductsUseCase
+    private val getProductsUseCase: HomeGetProductsUseCase,
+    private val createOrderUseCase: CartCreateOrderUseCase
 ) : ViewModel() {
 
     //region Properties
@@ -54,19 +56,52 @@ class HomeViewModel @Inject constructor(
             is HomeScreenEvent.OnRefreshRequested -> init()
             is HomeScreenEvent.ShowDialogWithProduct -> {
                 uiState = uiState.copy(
-                        selectedProduct = event.product,
-                        showDialog = true
-                    )
-                }
-            is HomeScreenEvent.CloseDialog -> {
-                uiState = uiState.copy(showDialog = false, selectedProduct = null)
+                    selectedProduct = event.product,
+                    showDialog = true
+                )
             }
+
+            is HomeScreenEvent.CloseDialog -> {
+                uiState = uiState.copy(
+                    showDialog = false,
+                    showConfirmDialog = false,
+                    selectedProduct = null
+                )
+            }
+
+            is HomeScreenEvent.ShowConfirmDialog -> {
+                uiState = uiState.copy(
+                    showConfirmDialog = true
+                )
+            }
+
+            is HomeScreenEvent.OnConfirmOrder -> confirmOrder()
         }
     }
 
     //endregion
 
     //region Visible for Testing
+
+    @VisibleForTesting
+    fun confirmOrder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val params = CartCreateOrderUseCase.Params(uiState.order)
+            createOrderUseCase.runAsync(params = params)
+                .onSuccess {
+                    uiState = uiState.copy(
+                        order = CartCreateOrderModel(),
+                        isCartOpen = false,
+                        showConfirmDialog = false,
+                        showDialog = false,
+                        snackBarMessage = "Pedido realizado com sucesso! Agora é só aguardar ;)"
+                    )
+                }
+                .onFailure {
+
+                }
+        }
+    }
 
     @VisibleForTesting
     fun handleRemoveItemFromCart(item: CartOrderItemModel) {
@@ -105,6 +140,7 @@ class HomeViewModel @Inject constructor(
 
     @VisibleForTesting
     private fun handleCartClick() {
+        uiState = uiState.copy(isCartOpen = !uiState.isCartOpen)
     }
 
     @VisibleForTesting
@@ -198,7 +234,7 @@ class HomeViewModel @Inject constructor(
                 totalValue = updatedTotalValue
             )
         } else {
-            CartOrderModel(
+            CartCreateOrderModel(
                 orderNumber = (0..9999).random().toString(),
                 paymentMethod = PaymentMethod.UNKNOWN,
                 totalValue = updatedTotalValue,

@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import digital.studioweb.selfhub_app.R
 import digital.studioweb.selfhub_app.domain.features.home.models.CategoryModel
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
@@ -72,7 +73,9 @@ import digital.studioweb.selfhub_app.presentation.features.productdetails.Produc
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavHostController
+) {
     val viewModel: HomeViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
@@ -90,12 +93,10 @@ private fun HomeScreenContent(
     uiState: HomeUIState,
     onEvent: (HomeScreenEvent) -> Unit
 ) {
-    var showRightDrawer by remember { mutableStateOf(false) }
-
     HomeDualDrawerLayout(
         showLeftDrawer = false,
-        showRightDrawer = showRightDrawer,
-        onCloseRightDrawer = { showRightDrawer = false },
+        showRightDrawer = uiState.isCartOpen,
+        onCloseRightDrawer = { onEvent(HomeScreenEvent.OnCartClick) },
         rightDrawerContent = {
             CartComponent()
         },
@@ -106,7 +107,7 @@ private fun HomeScreenContent(
                 uiState.isSuccess -> HomeSuccessContent(
                     uiState = uiState,
                     onEvent = onEvent,
-                    onCartClick = { showRightDrawer = true }
+                    onCartClick = { onEvent(HomeScreenEvent.OnCartClick) }
                 )
             }
         }

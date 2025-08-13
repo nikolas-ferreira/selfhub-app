@@ -1,12 +1,21 @@
 package digital.studioweb.selfhub_app.data.features.auth
 
 import digital.studioweb.selfhub_app.data.base.ApiResponse
-import digital.studioweb.selfhub_app.data.features.auth.models.LoginDTO
-import digital.studioweb.selfhub_app.domain.features.auth.models.LoginRequestModel
+import digital.studioweb.selfhub_app.data.features.auth.models.AssociateDeviceRequestDTO
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AuthAPI {
-    @POST("auth/login")
-    suspend fun login(@Body loginRequestModel: LoginRequestModel): ApiResponse<LoginDTO>
+    @POST("auth/associate-device")
+    suspend fun associateDevice(
+        @Body associateDeviceRequest: AssociateDeviceRequestDTO
+    ): ApiResponse<Unit>
+
+    @GET("restaurant/{restaurantCnpj}")
+    suspend fun getRestaurantByCNPJ(
+        @Path("restaurantCnpj") cnpj: String
+    ): ApiResponse<Unit>
 }

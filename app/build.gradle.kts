@@ -77,7 +77,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11" // compatível com Kotlin 2.0
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
@@ -100,6 +100,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.database.ktx)
@@ -112,17 +113,29 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.hilt.navigation.compose)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("io.coil-kt:coil-compose:2.5.0") // ou a versão mais recente
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 
+    // Coil
+    implementation(libs.coil.compose)
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.logging.interceptor)
 
+    // Shimmer
     implementation(libs.compose.shimmer)
+
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+
+    // Splash
+    implementation(libs.androidx.core.splashscreen)
+
+    // Encrypted Shared Prefs
+    implementation(libs.androidx.security.crypto)
 
 }

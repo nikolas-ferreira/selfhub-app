@@ -12,7 +12,7 @@ data class ProductDTO(
     @SerialName("name")
     val name: String,
 
-    @SerialName("price")
+    @SerialName("additionalPrice")
     val price: Double,
 
     @SerialName("imageUrl")

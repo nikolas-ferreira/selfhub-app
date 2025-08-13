@@ -8,6 +8,6 @@ object FirebaseUtils {
     const val FIREBASE_RESTAURANT_ID = "PnE5ONo0ipKDDOpfyvBB"
     
     const val FIELD_NAME = "name"
-    const val FIELD_PRICE = "price"
+    const val FIELD_PRICE = "additionalPrice"
     const val FIELD_ADD_ITEMS = "addItems"
 }

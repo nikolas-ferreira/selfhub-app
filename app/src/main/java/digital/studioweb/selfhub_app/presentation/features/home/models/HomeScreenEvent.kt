@@ -4,8 +4,10 @@ import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderItemMo
 import digital.studioweb.selfhub_app.domain.features.home.models.ProductModel
 
 sealed class HomeScreenEvent {
+    object ShowConfirmDialog : HomeScreenEvent()
     data class ShowDialogWithProduct(val product: ProductModel) : HomeScreenEvent()
     object CloseDialog : HomeScreenEvent()
+    object OnConfirmOrder : HomeScreenEvent()
     data class OnCategorySelected(val index: Int) : HomeScreenEvent()
     data class OnSearchTextChanged(val text: String) : HomeScreenEvent()
     data class OnSidebarItemSelected(val index: Int) : HomeScreenEvent()

@@ -1,6 +1,6 @@
 package digital.studioweb.selfhub_app.data.features.home.models
 
-import digital.studioweb.selfhub_app.domain.features.home.models.CartOrderModel
+import digital.studioweb.selfhub_app.domain.features.home.models.CartCreateOrderModel
 import digital.studioweb.selfhub_app.domain.features.models.PaymentMethod
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -25,8 +25,8 @@ data class OrderDTO(
     @SerialName("id")
     val items: List<OrderItemDTO>? = null,
 ) {
-    fun mapTo(): CartOrderModel {
-        return CartOrderModel(
+    fun mapTo(): CartCreateOrderModel {
+        return CartCreateOrderModel(
             orderNumber = orderNumber ?: "",
 //            tableNumber = tableNumber ?: 0,
             paymentMethod = paymentMethod ?: PaymentMethod.PIX,
