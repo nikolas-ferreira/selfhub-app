@@ -67,14 +67,16 @@ class ActivationViewModel @Inject constructor(
                     associateDevice()
                 }
                 .onFailure { exception ->
-                    if (exception.message!!.contains("404")) {
-                        uiState.copy(
-                            errorSnackBarMessage = "Ops! Parece que não temos um restaurante cadastrado com esse CNPJ em nossa base. Entre em contato pelo fone (51) 3365-9407",
-                        )
+                    val errorMessage = if (exception.message?.contains("404") == true) {
+                        "Ops! Parece que não temos um restaurante cadastrado com esse CNPJ em nossa base. Entre em contato pelo fone (51) 3365-9407"
+                    } else {
+                        "Ocorreu um erro ao ativar. Tente novamente."
                     }
+
                     uiState = uiState.copy(
                         isLoading = false,
-                        isCNPJValid = false
+                        isCNPJValid = false,
+                        errorSnackBarMessage = errorMessage
                     )
                 }
         }
