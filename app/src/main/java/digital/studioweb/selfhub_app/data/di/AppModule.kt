@@ -44,7 +44,7 @@ object AppModule {
     //region Retrofit
 
     @Provides
-    fun provideBaseUrl() = "https://selfhub-backend-dcf8eec84eed.herokuapp.com/"
+    fun provideBaseUrl() = "https://selfhub-backend.onrender.com/"
 
     @Provides
     @Singleton
